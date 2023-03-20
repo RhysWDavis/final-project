@@ -131,6 +131,7 @@ public class QueryEngine {
                 result.DocName = d;
                 result.docScore = hits[i].score;
                 ans.add(result);
+                System.out.println("The document: " + result.DocName + "had a score of: " + result.docScore);
             }
 
         } catch (Exception e) {
