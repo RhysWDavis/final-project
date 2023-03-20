@@ -117,10 +117,10 @@ public class QueryEngine {
         try {
             Query q = new QueryParser("text", analyzer).parse(fullQuery);
 
-            int hitsPerPage = 10;
             IndexReader reader = DirectoryReader.open(index);
             IndexSearcher searcher = new IndexSearcher(reader);
-            TopDocs docs = searcher.search(q, hitsPerPage);
+            int numHits = searcher.count(q);
+            TopDocs docs = searcher.search(q, numHits);
             ScoreDoc[] hits = docs.scoreDocs;
 
             for (int i=0; i<hits.length; ++i) {
