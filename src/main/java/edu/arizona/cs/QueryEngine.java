@@ -96,14 +96,16 @@ public class QueryEngine {
         List<ResultClass> ans = new ArrayList<ResultClass>();
 
 
-        // String fullQuery = query[0] + " " + query[1];
-        fullQuery = fullQuery.substring(0, fullQuery.length() - 1);
+        // fullQuery = fullQuery.substring(0, fullQuery.length() - 1);
         try {
             Query q = new QueryParser("text", analyzer).parse(fullQuery);
 
             IndexReader reader = DirectoryReader.open(index);
             IndexSearcher searcher = new IndexSearcher(reader);
             int numHits = searcher.count(q);
+            if (numHits == 0) {
+                return null;
+            }
             TopDocs docs = searcher.search(q, numHits);
             ScoreDoc[] hits = docs.scoreDocs;
 
