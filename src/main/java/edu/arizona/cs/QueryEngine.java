@@ -41,12 +41,16 @@ public class QueryEngine {
         buildIndex();
     }
 
+    /**
+     * Builds the index by going through each line of the input text file, and
+     * creating a document from each. The first bit of text is the docid which
+     * ends once the first space character is seen, and everything afterwards
+     * in the text contained in that document.
+     */
     private void buildIndex() {
         //Get file from resources folder
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource(inputFilePath).getFile());
-
-        // File file = new File(inputFilePath);
         
         try (Scanner inputScanner = new Scanner(file)) {
             Path path = Paths.get("src/main/java/edu/arizona/cs/");
@@ -67,8 +71,6 @@ public class QueryEngine {
                 w.addDocument(doc);
             }
             
-            // System.out.println("w has this many documents: " + w.numDocs());
-
             w.close();
             inputScanner.close();
         } catch (IOException e) {
@@ -89,14 +91,19 @@ public class QueryEngine {
         }
     }
 
+    /**
+     * Performs the functionality of giving a query to the index, obtaining the results,
+     * and printing out and returning some of them.
+     * 
+     * @param fullQuery - The exact query to be passed to the index
+     * @return a list of ResultClass objects of each document matching the fullQuery
+     */
     public List<ResultClass> runQueries(String fullQuery) {
         if(!indexExists) {
             buildIndex();
         }
         List<ResultClass> ans = new ArrayList<ResultClass>();
 
-
-        // fullQuery = fullQuery.substring(0, fullQuery.length() - 1);
         try {
             Query q = new QueryParser("text", analyzer).parse(fullQuery);
 
@@ -109,6 +116,7 @@ public class QueryEngine {
             TopDocs docs = searcher.search(q, numHits);
             ScoreDoc[] hits = docs.scoreDocs;
 
+            // For each document matching the query, add it to the list and print out some info
             for (int i=0; i<hits.length; ++i) {
                 int docID = hits[i].doc;
                 Document d = searcher.doc(docID);
@@ -128,6 +136,8 @@ public class QueryEngine {
 
     public List<ResultClass> runQ1_1(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
         System.out.println("\n\n ----- RUNNING Q1_1 -----");
+
+        // runs the query: information retrieval
         String fullQuery = query[0] + " " + query[1];
 
         return runQueries(fullQuery);
@@ -135,29 +145,31 @@ public class QueryEngine {
 
     public List<ResultClass> runQ1_2_a(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
         System.out.println("\n\n ----- RUNNING Q1_2_a -----");
-        String fullQuery = query[0] + " AND " + query[1];
-        System.out.println("The query is: ." + fullQuery + ".");
 
+        // runs the query: information AND retrieval
+        String fullQuery = query[0] + " AND " + query[1];
         return runQueries(fullQuery);
     }
 
     public List<ResultClass> runQ1_2_b(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
-        System.out.println("\n\n ----- RUNNING Q1_2_b -----");
-        String fullQuery = query[0] + " NOT " + query[1];
-        System.out.println("The query is: ." + fullQuery + ".");
+        System.out.println("\n\n ----- RUNNING Q1_2_b -----");  
 
+        // runs the query: information AND NOT retrieval
+        String fullQuery = query[0] + " NOT " + query[1];
         return runQueries(fullQuery);
     }
 
     public List<ResultClass> runQ1_2_c(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
         System.out.println("\n\n ----- RUNNING Q1_2_c -----");
+
+        // runs the query: "information retrieval" (occurring with no words in between)
         String fullQuery = "\"" + query[0] + " " + query[1] + "\"~1";
 
         return runQueries(fullQuery);
     }
 
     public List<ResultClass> runQ1_3(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
-
+        // ***Not implemented as I am an undergrad student***
         if(!indexExists) {
             buildIndex();
         }
