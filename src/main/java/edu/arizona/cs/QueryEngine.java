@@ -133,14 +133,14 @@ public class QueryEngine {
 
     public List<ResultClass> runQ1_2_a(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
         System.out.println("\n\n ----- RUNNING Q1_2_a -----");
-        String fullQuery = query[0] + " AND " + query[1];
+        String fullQuery = "\"" + query[0] + "\"" + " AND " + "\"" + query[1] + "\"" ;
 
         return runQueries(fullQuery);
     }
 
     public List<ResultClass> runQ1_2_b(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
         System.out.println("\n\n ----- RUNNING Q1_2_b -----");
-        String fullQuery = query[0] + " NOT " + query[1];
+        String fullQuery = "\"" + query[0] + "\"" + " NOT " + "\"" + query[1] + "\"" ;
 
         return runQueries(fullQuery);
     }
