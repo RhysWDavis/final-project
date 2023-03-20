@@ -67,7 +67,7 @@ public class QueryEngine {
                 w.addDocument(doc);
             }
             
-            System.out.println("w has this many documents: " + w.numDocs());
+            // System.out.println("w has this many documents: " + w.numDocs());
 
             w.close();
             inputScanner.close();
@@ -89,14 +89,14 @@ public class QueryEngine {
         }
     }
 
-    public List<ResultClass> runQ1_1(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
+    public List<ResultClass> runQueries(String fullQuery) {
         if(!indexExists) {
             buildIndex();
         }
         List<ResultClass> ans = new ArrayList<ResultClass>();
 
 
-        String fullQuery = query[0] + " " + query[1];
+        // String fullQuery = query[0] + " " + query[1];
         fullQuery = fullQuery.substring(0, fullQuery.length() - 1);
         try {
             Query q = new QueryParser("text", analyzer).parse(fullQuery);
@@ -121,37 +121,35 @@ public class QueryEngine {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-        // ans =returnDummyResults(2);
         return ans;
+    }
+
+    public List<ResultClass> runQ1_1(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
+        System.out.println("\n\n ----- RUNNING Q1_1 -----");
+        String fullQuery = query[0] + " " + query[1];
+
+        return runQueries(fullQuery);
     }
 
     public List<ResultClass> runQ1_2_a(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
-        if(!indexExists) {
-            buildIndex();
-        }
-        List<ResultClass>  ans=new ArrayList<ResultClass>();
-        ans =returnDummyResults(2);
-        return ans;
+        System.out.println("\n\n ----- RUNNING Q1_2_a -----");
+        String fullQuery = query[0] + " AND " + query[1];
+
+        return runQueries(fullQuery);
     }
 
     public List<ResultClass> runQ1_2_b(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
-        if(!indexExists) {
-            buildIndex();
-        }
-        List<ResultClass>  ans=new ArrayList<ResultClass>();
-        ans =returnDummyResults(0);
-        return ans;
+        System.out.println("\n\n ----- RUNNING Q1_2_b -----");
+        String fullQuery = query[0] + " NOT " + query[1];
+
+        return runQueries(fullQuery);
     }
 
     public List<ResultClass> runQ1_2_c(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
-        if(!indexExists) {
-            buildIndex();
-        }
-        List<ResultClass>  ans=new ArrayList<ResultClass>();
-        ans =returnDummyResults(1);
-        return ans;
+        System.out.println("\n\n ----- RUNNING Q1_2_c -----");
+        String fullQuery = "\"" + query[0] + " " + query[1] + "\"~1";
+
+        return runQueries(fullQuery);
     }
 
     public List<ResultClass> runQ1_3(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
