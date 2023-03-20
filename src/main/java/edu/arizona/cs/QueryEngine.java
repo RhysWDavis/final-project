@@ -1,21 +1,43 @@
 package edu.arizona.cs;
 
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.SimpleFSDirectory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
+@SuppressWarnings("unused")
 public class QueryEngine {
-    boolean indexExists=false;
-    String inputFilePath ="";
+    boolean indexExists = false;
+    String inputFilePath = "";
+    Directory index;
+    Analyzer analyzer;
 
     public QueryEngine(String inputFile){
-        inputFilePath =inputFile;
+        inputFilePath = inputFile;
         buildIndex();
     }
 
@@ -24,10 +46,27 @@ public class QueryEngine {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource(inputFilePath).getFile());
 
+        // File file = new File(inputFilePath);
+        
         try (Scanner inputScanner = new Scanner(file)) {
+            Path path = Paths.get("src/main/java/edu/arizona/cs/");
+
+            analyzer = new WhitespaceAnalyzer();
+            index = FSDirectory.open(path);
+            IndexWriterConfig config = new IndexWriterConfig(analyzer);
+            IndexWriter w = new IndexWriter(index, config);
+
+            // Adds each line of the input file to the index as a new document
             while (inputScanner.hasNextLine()) {
-                System.out.println(inputScanner.nextLine());
+                String line = inputScanner.nextLine();
+                int firstSpace = line.indexOf(" ");
+                Document doc = new Document();
+                doc.add(new StringField("docID", line.substring(0, firstSpace), Field.Store.YES));
+                doc.add(new TextField("text", line.substring(firstSpace), Field.Store.YES));
+                w.addDocument(doc);
             }
+
+            w.close();
             inputScanner.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -37,7 +76,7 @@ public class QueryEngine {
 
     public static void main(String[] args ) {
         try {
-            String fileName = "input.txt";
+            String fileName = "/Users/lilbig/Desktop/School/Spring 2023/CSC483/hw3_java-RhysWDavis/target/classes/input.txt";
             System.out.println("********Welcome to  Homework 3!");
             String[] query13a = {"information", "retrieval"};
             QueryEngine objQueryEngine = new QueryEngine(fileName);
@@ -47,12 +86,59 @@ public class QueryEngine {
         }
     }
 
+    // public List<ResultClass> runQueries(String[] query) {
+    //     String fullQuery = query[0] + " " + query[1];
+    //     fullQuery = fullQuery.substring(0, fullQuery.length() - 1);
+    //     try {
+    //         Query q = new QueryParser("text", analyzer).parse(fullQuery);
+
+    //         int hitsPerPage = 10;
+    //         IndexReader reader = DirectoryReader.open(index);
+    //         IndexSearcher searcher = new IndexSearcher(reader);
+    //         TopDocs docs = searcher.search(q, hitsPerPage);
+    //         ScoreDoc[] hits = docs.scoreDocs;
+
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    //     return null;
+    // }
+
     public List<ResultClass> runQ1_1(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
+        System.out.println("hello!");
         if(!indexExists) {
             buildIndex();
         }
-        List<ResultClass>  ans=new ArrayList<ResultClass>();
-        ans =returnDummyResults(2);
+        List<ResultClass> ans = new ArrayList<ResultClass>();
+
+
+        String fullQuery = query[0] + " " + query[1];
+        fullQuery = fullQuery.substring(0, fullQuery.length() - 1);
+        try {
+            Query q = new QueryParser("text", analyzer).parse(fullQuery);
+
+            int hitsPerPage = 10;
+            IndexReader reader = DirectoryReader.open(index);
+            IndexSearcher searcher = new IndexSearcher(reader);
+            TopDocs docs = searcher.search(q, hitsPerPage);
+            ScoreDoc[] hits = docs.scoreDocs;
+
+            for (int i=0; i<hits.length; ++i) {
+                int docID = hits[i].doc;
+                Document d = searcher.doc(docID);
+
+                ResultClass result = new ResultClass();
+                result.DocName = d;
+                result.docScore = hits[i].score;
+                ans.add(result);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        // ans =returnDummyResults(2);
         return ans;
     }
 
