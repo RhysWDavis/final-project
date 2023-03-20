@@ -55,6 +55,7 @@ public class QueryEngine {
             index = FSDirectory.open(path);
             IndexWriterConfig config = new IndexWriterConfig(analyzer);
             IndexWriter w = new IndexWriter(index, config);
+            w.deleteAll();
 
             // Adds each line of the input file to the index as a new document
             while (inputScanner.hasNextLine()) {
@@ -65,6 +66,8 @@ public class QueryEngine {
                 doc.add(new TextField("text", line.substring(firstSpace), Field.Store.YES));
                 w.addDocument(doc);
             }
+            
+            System.out.println("w has this many documents: " + w.numDocs());
 
             w.close();
             inputScanner.close();
@@ -131,7 +134,7 @@ public class QueryEngine {
                 result.DocName = d;
                 result.docScore = hits[i].score;
                 ans.add(result);
-                System.out.println("The document: " + result.DocName + "had a score of: " + result.docScore);
+                System.out.println("The document: " + result.DocName.get("docID") + "had a score of: " + result.docScore);
             }
 
         } catch (Exception e) {
