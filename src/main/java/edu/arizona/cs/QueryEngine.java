@@ -62,7 +62,7 @@ public class QueryEngine {
                 String line = inputScanner.nextLine();
                 int firstSpace = line.indexOf(" ");
                 Document doc = new Document();
-                doc.add(new StringField("docID", line.substring(0, firstSpace), Field.Store.YES));
+                doc.add(new StringField("docid", line.substring(0, firstSpace), Field.Store.YES));
                 doc.add(new TextField("text", line.substring(firstSpace), Field.Store.YES));
                 w.addDocument(doc);
             }
@@ -89,26 +89,7 @@ public class QueryEngine {
         }
     }
 
-    // public List<ResultClass> runQueries(String[] query) {
-    //     String fullQuery = query[0] + " " + query[1];
-    //     fullQuery = fullQuery.substring(0, fullQuery.length() - 1);
-    //     try {
-    //         Query q = new QueryParser("text", analyzer).parse(fullQuery);
-
-    //         int hitsPerPage = 10;
-    //         IndexReader reader = DirectoryReader.open(index);
-    //         IndexSearcher searcher = new IndexSearcher(reader);
-    //         TopDocs docs = searcher.search(q, hitsPerPage);
-    //         ScoreDoc[] hits = docs.scoreDocs;
-
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    //     return null;
-    // }
-
     public List<ResultClass> runQ1_1(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
-        System.out.println("hello!");
         if(!indexExists) {
             buildIndex();
         }
@@ -134,7 +115,7 @@ public class QueryEngine {
                 result.DocName = d;
                 result.docScore = hits[i].score;
                 ans.add(result);
-                System.out.println("The document: " + result.DocName.get("docID") + "had a score of: " + result.docScore);
+                System.out.println("The document: " + result.DocName.get("docid") + " had a score of: " + result.docScore);
             }
 
         } catch (Exception e) {
