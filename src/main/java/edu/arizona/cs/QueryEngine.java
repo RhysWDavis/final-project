@@ -29,7 +29,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
-@SuppressWarnings("unused")
+import javax.naming.spi.DirStateFactory.Result;
+
+// @SuppressWarnings("unused")
 public class QueryEngine {
     boolean indexExists = false;
     String inputFilePath = "";
@@ -49,8 +51,9 @@ public class QueryEngine {
      */
     private void buildIndex() {
         //Get file from resources folder
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(inputFilePath).getFile());
+        // ClassLoader classLoader = getClass().getClassLoader();
+        // File file = new File(classLoader.getResource(inputFilePath).getFile());
+        File file = new File(inputFilePath);
         
         try (Scanner inputScanner = new Scanner(file)) {
             Path path = Paths.get("src/main/java/edu/arizona/cs/");
@@ -85,6 +88,10 @@ public class QueryEngine {
             System.out.println("********Welcome to  Homework 3!");
             String[] query13a = {"information", "retrieval"};
             QueryEngine objQueryEngine = new QueryEngine(fileName);
+            // List<ResultClass> q = objQueryEngine.runQ1_2_a(query13a);
+            // for (ResultClass r : q) {
+            //     System.out.println(r);
+            // }
         }
         catch (Exception ex) {
             System.out.println(ex.getMessage());
