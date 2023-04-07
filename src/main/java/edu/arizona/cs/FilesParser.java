@@ -17,7 +17,7 @@ public class FilesParser {
     public static void main(String[] args) {
         try {
             //String filename = args[0];
-            String filename = "/Users/lilbig/Desktop/wiki_temp_subset/small.txt";
+            String filename = "/Users/lilbig/Desktop/wiki_temp_subset/enwiki-20140602-pages-articles.xml-0006.txt";
 
             Scanner input = new Scanner(new File(filename));
             String newFileName = filename.substring(0, filename.length()-4) + "_last_paragraph.txt";
@@ -37,15 +37,21 @@ public class FilesParser {
      * @throws IOException
      */
     private static void parseFile(Scanner input, FileWriter writerFile) throws IOException {
+        // String savedLine = "";
         while (input.hasNextLine()) {
             String line = input.nextLine();
             if (line.startsWith("[[") && line.endsWith("]]")) {
                 while (!line.startsWith("==") && !line.endsWith("==")) {
+                    if (line.startsWith("[[") && line.endsWith("]]")) {
+                        // savedLine = line;
+                        break;
+                    }
                     writerFile.write(line + "\n");
                     line = input.nextLine();
                 }
-                writerFile.write("End of paragraph.[]\n");
+                writerFile.write(line + "\nEnd of paragraph.[]\n\n");
             }
         }
+        System.out.println("hello");
     }
 }

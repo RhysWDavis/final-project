@@ -31,12 +31,35 @@ public class QueryEngine {
     boolean indexExists = false;
     String inputFilePath = "";
     Directory index;
-    Analyzer analyzer;
+    Analyzer analyzer = new StandardAnalyzer();
+
+    public static void main(String[] args ) {
+        try {
+            String fileName = "/Users/lilbig/Desktop/wiki_temp_subset/enwiki-20140602-pages-articles.xml-0005_last_paragraph.txt";
+            String[] test_query = {"the", "standards", "produced", "by", "BSI", "Group", "financial", "institution"};            // String[] test_query = {"the", "standards", "produced", "by", "BSI", "Group"};
+            // String[] test_query = {"standards", "produced"};
+            QueryEngine objQueryEngine = new QueryEngine(fileName);
+            List<ResultClass> q = objQueryEngine.runQ1(test_query);
+        }
+        catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
     public QueryEngine(String inputFile){
         inputFilePath = inputFile;
+
         buildIndex();
     }
+
+    // private void rebuildIndex() {
+    //     System.out.println("Do you want to rebuild the index? (yes / no)");
+    //     Scanner input = new Scanner(System.in);
+    //     String rebuild = input.nextLine().toLowerCase();
+    //     if (rebuild.equals("yes")) {
+    //         buildIndex();
+    //     }
+    // }
 
     /**
      * Builds the index by going through each line of the input text file, and
@@ -45,6 +68,7 @@ public class QueryEngine {
      * in the text contained in that document.
      */
     private void buildIndex() {
+        System.out.println("********Index creation starting.");
         //Get file from resources folder
         // ClassLoader classLoader = getClass().getClassLoader();
         // File file = new File(classLoader.getResource(inputFilePath).getFile());
@@ -53,14 +77,16 @@ public class QueryEngine {
         try (Scanner inputScanner = new Scanner(file)) {
             Path path = Paths.get("src/main/java/edu/arizona/cs/");
 
-            analyzer = new StandardAnalyzer();
+            // analyzer = new StandardAnalyzer();
             index = FSDirectory.open(path);
             IndexWriterConfig config = new IndexWriterConfig(analyzer);
+            config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
             IndexWriter w = new IndexWriter(index, config);
             w.deleteAll();
 
             // Adds each line of the input file to the index as a new document
             String line;
+            int numDocs = 0;
             while (inputScanner.hasNextLine()) {
                 line = inputScanner.nextLine();
                 Document doc = new Document();
@@ -70,7 +96,8 @@ public class QueryEngine {
                     doc.add(new StringField("docName", line.substring(2, line.length()-2), Field.Store.YES));
                     while (inputScanner.hasNextLine()) {
                         line = inputScanner.nextLine();
-                        if (line.equals("End of paragraph.[]\n")) {
+                        if (line.equals("End of paragraph.[]")) {
+                            numDocs += 1;
                             break;
                         } else {
                             text += line;
@@ -80,7 +107,7 @@ public class QueryEngine {
                 doc.add(new TextField("text", text, Field.Store.YES));
                 w.addDocument(doc);
             }
-            
+            System.out.println("Created " + numDocs + " documents in the index.\n");
             w.close();
             inputScanner.close();
         } catch (IOException e) {
@@ -89,22 +116,19 @@ public class QueryEngine {
         indexExists = true;
     }
 
-    public static void main(String[] args ) {
-        try {
-            String fileName = "/Users/lilbig/Desktop/wiki_temp_subset/small_last_paragraph.txt";
-            System.out.println("********Index creation starting.");
-            String[] test_query = {"the", "standards", "produced", "by", "BSI", "Group"};            // String[] test_query = {"the", "standards", "produced", "by", "BSI", "Group"};
-            // String[] test_query = {"standards"};
-            QueryEngine objQueryEngine = new QueryEngine(fileName);
-            List<ResultClass> q = objQueryEngine.runQ1(test_query);
-            for (ResultClass r : q) {
-                System.out.println(r);
-            }
+    public List<ResultClass> runQ1(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
+        System.out.println("\n\n ----- RUNNING Q1 -----");
+        String fullQuery = "";
+        // runs the query
+        for (String s : query) {
+            fullQuery += s + " OR ";
         }
-        catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+        fullQuery = fullQuery.substring(0, fullQuery.length()-3);
+        
+
+        return runQueries(fullQuery);
     }
+
 
     /**
      * Performs the functionality of giving a query to the index, obtaining the results,
@@ -114,9 +138,6 @@ public class QueryEngine {
      * @return a list of ResultClass objects of each document matching the fullQuery
      */
     public List<ResultClass> runQueries(String fullQuery) {
-        if(!indexExists) {
-            buildIndex();
-        }
         List<ResultClass> ans = new ArrayList<ResultClass>();
 
         try {
@@ -140,26 +161,13 @@ public class QueryEngine {
                 result.DocName = d;
                 result.docScore = hits[i].score;
                 ans.add(result);
-                System.out.println("The document: " + result.DocName.get("docid") + " had a score of: " + result.docScore);
+                System.out.println("The document: " + result.DocName.get("docName") + " had a score of: " + result.docScore);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         return ans;
-    }
-
-    public List<ResultClass> runQ1(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
-        System.out.println("\n\n ----- RUNNING Q1 -----");
-        String fullQuery = "";
-        // runs the query
-        for (String s : query) {
-            fullQuery += s + " AND ";
-        }
-        fullQuery = fullQuery.substring(0, fullQuery.length()-4);
-        
-
-        return runQueries(fullQuery);
     }
 
     public List<ResultClass> oldQs(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
