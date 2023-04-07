@@ -1,7 +1,6 @@
 package edu.arizona.cs;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -11,7 +10,6 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -19,7 +17,6 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.SimpleFSDirectory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +25,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
-
-import javax.naming.spi.DirStateFactory.Result;
 
 // @SuppressWarnings("unused")
 public class QueryEngine {
@@ -58,19 +53,31 @@ public class QueryEngine {
         try (Scanner inputScanner = new Scanner(file)) {
             Path path = Paths.get("src/main/java/edu/arizona/cs/");
 
-            analyzer = new WhitespaceAnalyzer();
+            analyzer = new StandardAnalyzer();
             index = FSDirectory.open(path);
             IndexWriterConfig config = new IndexWriterConfig(analyzer);
             IndexWriter w = new IndexWriter(index, config);
             w.deleteAll();
 
             // Adds each line of the input file to the index as a new document
+            String line;
             while (inputScanner.hasNextLine()) {
-                String line = inputScanner.nextLine();
-                int firstSpace = line.indexOf(" ");
+                line = inputScanner.nextLine();
                 Document doc = new Document();
-                doc.add(new StringField("docid", line.substring(0, firstSpace), Field.Store.YES));
-                doc.add(new TextField("text", line.substring(firstSpace), Field.Store.YES));
+
+                String text = "";
+                if (line.startsWith("[[")) {
+                    doc.add(new StringField("docName", line.substring(2, line.length()-2), Field.Store.YES));
+                    while (inputScanner.hasNextLine()) {
+                        line = inputScanner.nextLine();
+                        if (line.equals("End of paragraph.[]\n")) {
+                            break;
+                        } else {
+                            text += line;
+                        }
+                    }
+                }
+                doc.add(new TextField("text", text, Field.Store.YES));
                 w.addDocument(doc);
             }
             
@@ -84,14 +91,15 @@ public class QueryEngine {
 
     public static void main(String[] args ) {
         try {
-            String fileName = "/Users/lilbig/Desktop/School/Spring 2023/CSC483/hw3_java-RhysWDavis/target/classes/input.txt";
-            System.out.println("********Welcome to  Homework 3!");
-            String[] query13a = {"information", "retrieval"};
+            String fileName = "/Users/lilbig/Desktop/wiki_temp_subset/small_last_paragraph.txt";
+            System.out.println("********Index creation starting.");
+            String[] test_query = {"the", "standards", "produced", "by", "BSI", "Group"};            // String[] test_query = {"the", "standards", "produced", "by", "BSI", "Group"};
+            // String[] test_query = {"standards"};
             QueryEngine objQueryEngine = new QueryEngine(fileName);
-            // List<ResultClass> q = objQueryEngine.runQ1_2_a(query13a);
-            // for (ResultClass r : q) {
-            //     System.out.println(r);
-            // }
+            List<ResultClass> q = objQueryEngine.runQ1(test_query);
+            for (ResultClass r : q) {
+                System.out.println(r);
+            }
         }
         catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -141,65 +149,32 @@ public class QueryEngine {
         return ans;
     }
 
-    public List<ResultClass> runQ1_1(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
+    public List<ResultClass> runQ1(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
+        System.out.println("\n\n ----- RUNNING Q1 -----");
+        String fullQuery = "";
+        // runs the query
+        for (String s : query) {
+            fullQuery += s + " AND ";
+        }
+        fullQuery = fullQuery.substring(0, fullQuery.length()-4);
+        
+
+        return runQueries(fullQuery);
+    }
+
+    public List<ResultClass> oldQs(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
         System.out.println("\n\n ----- RUNNING Q1_1 -----");
 
         // runs the query: information retrieval
         String fullQuery = query[0] + " " + query[1];
-
-        return runQueries(fullQuery);
-    }
-
-    public List<ResultClass> runQ1_2_a(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
-        System.out.println("\n\n ----- RUNNING Q1_2_a -----");
-
         // runs the query: information AND retrieval
-        String fullQuery = query[0] + " AND " + query[1];
-        return runQueries(fullQuery);
-    }
-
-    public List<ResultClass> runQ1_2_b(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
-        System.out.println("\n\n ----- RUNNING Q1_2_b -----");  
-
+        fullQuery = query[0] + " AND " + query[1];
         // runs the query: information AND NOT retrieval
-        String fullQuery = query[0] + " NOT " + query[1];
-        return runQueries(fullQuery);
-    }
-
-    public List<ResultClass> runQ1_2_c(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
-        System.out.println("\n\n ----- RUNNING Q1_2_c -----");
-
+        fullQuery = query[0] + " NOT " + query[1];
         // runs the query: "information retrieval" (occurring with no words in between)
-        String fullQuery = "\"" + query[0] + " " + query[1] + "\"~1";
+        fullQuery = "\"" + query[0] + " " + query[1] + "\"~1";
 
         return runQueries(fullQuery);
-    }
-
-    public List<ResultClass> runQ1_3(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
-        // ***Not implemented as I am an undergrad student***
-        if(!indexExists) {
-            buildIndex();
-        }
-        StringBuilder result = new StringBuilder("");
-        List<ResultClass>  ans=new ArrayList<ResultClass>();
-        ans =returnDummyResults(2);
-        return ans;
-    }
-
-
-    private  List<ResultClass> returnDummyResults(int maxNoOfDocs) {
-
-        List<ResultClass> doc_score_list = new ArrayList<ResultClass>();
-            for (int i = 0; i < maxNoOfDocs; ++i) {
-                Document doc = new Document();
-                doc.add(new TextField("title", "", Field.Store.YES));
-                doc.add(new StringField("docid", "Doc"+Integer.toString(i+1), Field.Store.YES));
-                ResultClass objResultClass= new ResultClass();
-                objResultClass.DocName =doc;
-                doc_score_list.add(objResultClass);
-            }
-
-        return doc_score_list;
     }
 
 }

@@ -1,10 +1,11 @@
 package edu.arizona.cs;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-
+@SuppressWarnings("unused")
 public class TestQ1_2_a {
 
     @Test
@@ -13,11 +14,12 @@ public class TestQ1_2_a {
         String inputFileFullPath="input.txt";
 
         QueryEngine objQueryEngine = new QueryEngine(inputFileFullPath);
-        try {
+        // try {
 
             String[] common_query = {"information", "retrieval"};
 
-            List<ResultClass> ans1_2_a = objQueryEngine.runQ1_2_a(common_query);
+            // List<ResultClass> ans1_2_a = objQueryEngine.runQ1_2_a(common_query);
+            List<ResultClass> ans1_2_a = new ArrayList<>();
             String[] doc_names_q13a = {"Doc1", "Doc2"};
             assertEquals((doc_names_q13a.length) , ans1_2_a.size());
             int counter2 = 0;
@@ -29,14 +31,14 @@ public class TestQ1_2_a {
 
 
 
-        }
-        catch ( java.io.FileNotFoundException ex)
-        {
-            System.out.println(ex.getMessage()); }
+        // }
+        // catch ( java.io.FileNotFoundException ex)
+        // {
+        //     System.out.println(ex.getMessage()); }
 
-        catch ( java.io.IOException ex)
-        {
-            System.out.println(ex.getMessage()); }
+        // catch ( java.io.IOException ex)
+        // {
+        //     System.out.println(ex.getMessage()); }
 
     }
 
