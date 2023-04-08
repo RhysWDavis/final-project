@@ -36,7 +36,7 @@ public class QueryEngine {
     public static void main(String[] args ) {
         try {
             String fileName = "/Users/lilbig/Desktop/wiki_temp_subset/enwiki-20140602-pages-articles.xml-0005_last_paragraph.txt";
-            String[] test_query = {"the", "standards", "produced", "by", "BSI", "Group", "financial", "institution"};            // String[] test_query = {"the", "standards", "produced", "by", "BSI", "Group"};
+            String[] test_query = {"the", "standards", "produced", "by", "BSI", "Group", "financial", "institution"};
             // String[] test_query = {"standards", "produced"};
             QueryEngine objQueryEngine = new QueryEngine(fileName);
             List<ResultClass> q = objQueryEngine.runQ1(test_query);
