@@ -41,7 +41,8 @@ public class QueryEngine {
 
             
             //String whole_q = "The dominant paper in our nation's capital, it's among the top 10 U.S. papers in circulation";
-            String whole_q = "This woman who won consecutive heptathlons at the Olympics went to UCLA on a basketball scholarship";
+            // String whole_q = "This woman who won consecutive heptathlons at the Olympics went to UCLA on a basketball scholarship";
+            String whole_q = "One of the N.Y. Times' headlines on this landmark 1973 Supreme Court decision was \"Cardinals shocked\"";
             String[] test_query = whole_q.split(" ");
 
             // String[] test_query = {"standards", "produced"};
