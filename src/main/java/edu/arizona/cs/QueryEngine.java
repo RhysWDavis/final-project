@@ -20,9 +20,9 @@ import org.apache.lucene.store.FSDirectory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,23 +30,30 @@ import java.util.Scanner;
 
 // @SuppressWarnings("unused")
 public class QueryEngine {
-    boolean indexExists = false;
-    String inputDirPath = "";
-    Directory index;
-    Analyzer analyzer = new StandardAnalyzer();
+    private boolean indexExists = false;
+    private String inputDirPath = "";
+    private Directory index;
+    private Analyzer analyzer = new StandardAnalyzer();
+    private ArrayList<String[]> jQuestions;
+    private static final int CAT_INDEX = 0; 
+    private static final int Q_INDEX = 1; 
+    private static final int ANS_INDEX = 2; 
+
 
     public static void main(String[] args ) {
         try {
             String path = "/Users/lilbig/Desktop/483_final_project";
             QueryEngine objQueryEngine = new QueryEngine(path);
-            
+            objQueryEngine.getJQuestions(path);
+
+            // objQueryEngine.runQs();
+            objQueryEngine.checkExistence();
+
             //String whole_q = "The dominant paper in our nation's capital, it's among the top 10 U.S. papers in circulation";
             // String whole_q = "This woman who won consecutive heptathlons at the Olympics went to UCLA on a basketball scholarship";
             // String whole_q = "One of the N.Y. Times' headlines on this landmark 1973 Supreme Court decision was \"Cardinals shocked\"";
             // String[] test_query = whole_q.split(" ");
             // List<ResultClass> q = objQueryEngine.runQ1(test_query);
-
-            objQueryEngine.runQs();
         }
         catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -146,7 +153,6 @@ public class QueryEngine {
             q = userInput.nextLine();
         }
         userInput.close();
-        return;
     }
 
 
@@ -157,9 +163,8 @@ public class QueryEngine {
      * @param fullQuery - The exact query to be passed to the index
      * @return a list of ResultClass objects of each document matching the fullQuery
      */
-    public List<ResultClass> runQueries(String fullQuery) {
+    public List<ResultClass> runQueries(String fullQuery, int numHits) {
         List<ResultClass> ans = new ArrayList<ResultClass>();
-        int numHits = 20;
 
         try {
             Query q = new QueryParser("text", analyzer).parse(fullQuery);
@@ -182,22 +187,80 @@ public class QueryEngine {
                 result.DocName = d;
                 result.docScore = hits[i].score;
                 ans.add(result);
-                System.out.println("The document: " + result.DocName.get("docName") + " had a score of: " + result.docScore);
+                double score = Math.round(result.docScore * 1000d) / 1000d;
+                System.out.println("The document: " + result.DocName.get("docName") + " had a score of: " + score);
             }
-
-            // Sort the result documents and print out the top k
-            // int k = 20;
-            // Collections.sort(ans);
-            // for (int i = 0; i < k; i++) {
-            //     int numDocs = ans.size() - 1;
-            //     ResultClass result = ans.get(numDocs - i);
-            //     System.out.println("The document: " + result.DocName.get("docName") + " had a score of: " + result.docScore);
-            // }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         return ans;
+    }
+
+    /**
+     * See runQuery(String fullQuery, int numHits)
+     * Default's numHits to 20.
+     * 
+     * @param fullQuery
+     * @return
+     */
+    public List<ResultClass> runQueries(String fullQuery) {
+        return runQueries(fullQuery, 20);
+    }
+
+
+    /**
+     * Checks to see if there is a wikipedia article with the same title
+     * as the answer of a jeopardy question, for all jeopardy questions.
+     * 
+     * Must call getJQuestions(String path) before this method.
+     */
+    public void checkExistence() {
+
+        // Loop over all jeopardy questions
+        for (String[] jQ : jQuestions) {
+            String[] query = jQ[ANS_INDEX].split(" ");
+
+            String fullQuery = "";
+            for (String s : query) {
+                fullQuery += s + " OR ";
+            }
+            fullQuery = fullQuery.substring(0, fullQuery.length()-3);
+
+            // System.out.println("You entered the query: " + fullQuery);
+
+            System.out.println("Printing the answers to query " + jQ[ANS_INDEX]);
+            runQueries(fullQuery, 5);
+            System.out.println("\n\n");
+        }
+    }
+
+    /**
+     * Reads the questions.txt file from the directory and creates an ArrayList of
+     * Arrays, where each Array, A, contains all 3 lines per jeopardy question.
+     * A[0] = the category, use catIndex
+     * A[1] = the question itself, use qIndex
+     * A[2] = the answer to the question, use ansIndex
+     * @param path
+     */
+    public void getJQuestions(String path) {
+        jQuestions = new ArrayList<>();
+
+        try (Scanner jQuestionsFile = new Scanner(new File(path + "/questions.txt"))) {
+            while (jQuestionsFile.hasNextLine()) {
+                String category = jQuestionsFile.nextLine();
+                String question = jQuestionsFile.nextLine();
+                String answer = jQuestionsFile.nextLine();
+                jQuestionsFile.nextLine();  // Skips the empty line that follows
+
+                String[] q = {category, question, answer};
+                jQuestions.add(q);
+            }
+            jQuestionsFile.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Jeopardy questions file not found. Critical error.\n");
+        }
+        System.out.println("Generated " + jQuestions.size()+ " jeopardy questions.\n");
     }
 
 

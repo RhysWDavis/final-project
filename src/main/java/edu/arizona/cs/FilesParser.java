@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class FilesParser {
 
     public static void main(String[] args) {
