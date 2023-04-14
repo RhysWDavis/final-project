@@ -5,8 +5,64 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class FilesParser {
+
+    public static void main(String[] args) {
+        // String path = args[0];
+        String path = "/Users/lilbig/Desktop/483_final_project";
+
+        FilesParser fp = new FilesParser(path);
+    }
+
+
+    public FilesParser(String path) {
+        // Gets the contents of the directory passed in
+        File dir = new File(path);
+        String[] dirContentTemp = dir.list();
+        List<String> dirContent = Arrays.asList(dirContentTemp);
+
+        // Checks to make sure the directory containing the wiki files exists
+        if (!dirContent.contains("wiki-subset-20140602")) {
+            System.out.println("The directory \"wiki-subset-20140602\" could not be found in" 
+                + "the path given.\n Please enter a valid directory path.\n");
+        }
+        
+        // Loop over all wiki files in the directory (there should be 80 of them)
+        int i = 0;
+        File longWikiDir = new File(path + "/wiki-subset-20140602");
+        String[] longWikiDirContents = longWikiDir.list();
+        for (String longWikiFileName : longWikiDirContents) {
+            // Skip over any non .txt files (e.g. the Mac hidden file .DS_Store)
+            if (!longWikiFileName.endsWith(".txt")) {
+                continue;
+            }
+            
+            // Create new directory for the shortened files to go
+            String shortDirPath = path + "/wiki-subset-20140602-shortened";
+            new File(shortDirPath).mkdirs();  // does not overwrite dir if it already exists
+
+            // Get the longWikiFilePath and shortWikiFilePath
+            String longWikiFilePath = longWikiDir.getAbsolutePath() + "/" + longWikiFileName;
+
+            String shortWikiFileName = longWikiFileName.substring(0, longWikiFileName.
+                length() - 4) + "_last_paragraph.txt";
+            String shortWikiFilePath = shortDirPath + "/" + shortWikiFileName;
+
+            // Shorten the files, sending the shortened version to the newDir just created
+            // System.out.println("From: " + longWikiFilePath + "\nTo: " + shortWikiFilePath + "\n");
+            createShortenedFile(longWikiFilePath, shortWikiFilePath);
+            i++;
+        }
+        if (i == 80) {
+            System.out.println("All 80 files shortened successfully (or they already existed).\n");
+        } else {
+            System.out.println("Something went wrong, only" + i + "files shortened, when 80 should have been.\n");
+        }
+    }
+
 
     /**
      * Reads in an input file, following the format of Mihai's wikipedia collection,
@@ -15,15 +71,11 @@ public class FilesParser {
      * 
      * @param args - index 0 should be the path to the desired file to parse. 
      */
-    public static void main(String[] args) {
-        try {
-            //String filename = args[0];
-            String filename = "/Users/lilbig/Desktop/wiki_temp_subset/enwiki-20140602-pages-articles.xml-0005.txt";
-
-            String newFileName = filename.substring(0, filename.length()-4) + "_last_paragraph.txt";
-            File fileToWrite = new File(newFileName);
+    public void createShortenedFile(String fileToShorten, String shortenedFileName) {
+        try {            
+            File fileToWrite = new File(shortenedFileName);
             FileWriter writerFile = new FileWriter(fileToWrite);
-            parseFile(filename, writerFile);
+            parseFile(fileToShorten, writerFile);
             // generateArticleTitles(filename, writerFile);
 
             writerFile.close();
@@ -38,7 +90,7 @@ public class FilesParser {
      * @param writerFile - the FileWriter object to write to
      * @throws IOException
      */
-    private static void parseFile(String inputFileName, FileWriter writerFile) throws IOException {
+    private void parseFile(String inputFileName, FileWriter writerFile) throws IOException {
         try (BufferedReader input = new BufferedReader(new FileReader(inputFileName))) { 
             String line = "";
             boolean isBreak = false;
@@ -66,7 +118,7 @@ public class FilesParser {
         writerFile.close();
     }
 
-    public static void generateArticleTitles(String inputFileName, FileWriter writerFile) throws IOException {
+    public void generateArticleTitles(String inputFileName, FileWriter writerFile) throws IOException {
         try (BufferedReader input = new BufferedReader(new FileReader(inputFileName))) { 
             String line = "";
             while ((line = input.readLine()) != null) { 
