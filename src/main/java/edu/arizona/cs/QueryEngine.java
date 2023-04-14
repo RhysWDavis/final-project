@@ -38,18 +38,15 @@ public class QueryEngine {
     public static void main(String[] args ) {
         try {
             String path = "/Users/lilbig/Desktop/483_final_project";
-
+            QueryEngine objQueryEngine = new QueryEngine(path);
             
             //String whole_q = "The dominant paper in our nation's capital, it's among the top 10 U.S. papers in circulation";
             // String whole_q = "This woman who won consecutive heptathlons at the Olympics went to UCLA on a basketball scholarship";
-            String whole_q = "One of the N.Y. Times' headlines on this landmark 1973 Supreme Court decision was \"Cardinals shocked\"";
-            String[] test_query = whole_q.split(" ");
+            // String whole_q = "One of the N.Y. Times' headlines on this landmark 1973 Supreme Court decision was \"Cardinals shocked\"";
+            // String[] test_query = whole_q.split(" ");
+            // List<ResultClass> q = objQueryEngine.runQ1(test_query);
 
-            // String[] test_query = {"standards", "produced"};
-            QueryEngine objQueryEngine = new QueryEngine(path);
-
-            // change this to be a for loop over all queries in the 
-            List<ResultClass> q = objQueryEngine.runQ1(test_query);
+            objQueryEngine.runQs();
         }
         catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -77,63 +74,79 @@ public class QueryEngine {
         String[] dirContentTemp = dir.list();
         List<String> dirContent = Arrays.asList(dirContentTemp);
         
-        for (String wikiFileName : dirContent) {
-            String wikiFilePath = dir.getAbsolutePath() + "/" + wikiFileName;
-            try (Scanner inputScanner = new Scanner(new File(wikiFilePath))) {
-                Path path = Paths.get("src/main/java/edu/arizona/cs/");
+        try {
+            Path path = Paths.get("src/main/java/edu/arizona/cs/");
 
-                // analyzer = new StandardAnalyzer();
-                index = FSDirectory.open(path);
-                IndexWriterConfig config = new IndexWriterConfig(analyzer);
-                config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-                IndexWriter w = new IndexWriter(index, config);
-                w.deleteAll();
+            // analyzer = new StandardAnalyzer();
+            index = FSDirectory.open(path);
+            IndexWriterConfig config = new IndexWriterConfig(analyzer);
+            config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+            IndexWriter w = new IndexWriter(index, config);
+            w.deleteAll();
 
-                // Adds each line of the input file to the index as a new document
-                String line;
-                int numDocs = 0;
-                while (inputScanner.hasNextLine()) {
-                    line = inputScanner.nextLine();
-                    Document doc = new Document();
+            for (String wikiFileName : dirContent) {
+                String wikiFilePath = dir.getAbsolutePath() + "/" + wikiFileName;
+                try (Scanner inputScanner = new Scanner(new File(wikiFilePath))) {
+                
+                    // Adds each line of the input file to the index as a new document
+                    String line;
+                    int numDocs = 0;
+                    while (inputScanner.hasNextLine()) {
+                        line = inputScanner.nextLine();
+                        Document doc = new Document();
 
-                    String text = "";
-                    if (line.startsWith("[[")) {
-                        doc.add(new StringField("docName", line.substring(2, line.length()-2), Field.Store.YES));
-                        while (inputScanner.hasNextLine()) {
-                            line = inputScanner.nextLine();
-                            if (line.equals("End of paragraph.[]")) {
-                                numDocs += 1;
-                                break;
-                            } else {
-                                text += line;
+                        String text = "";
+                        if (line.startsWith("[[")) {
+                            doc.add(new StringField("docName", line.substring(2, line.length()-2), Field.Store.YES));
+                            while (inputScanner.hasNextLine()) {
+                                line = inputScanner.nextLine();
+                                if (line.equals("End of paragraph.[]")) {
+                                    numDocs += 1;
+                                    break;
+                                } else {
+                                    text += line;
+                                }
                             }
                         }
+                        doc.add(new TextField("text", text, Field.Store.YES));
+                        w.addDocument(doc);
                     }
-                    doc.add(new TextField("text", text, Field.Store.YES));
-                    w.addDocument(doc);
+                    System.out.println("Created " + numDocs + " documents in the index.\n");
+                    inputScanner.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                System.out.println("Created " + numDocs + " documents in the index.\n");
-                w.close();
-                inputScanner.close();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        }
-
+            w.close();
+        } catch (Exception e) {}
         indexExists = true;
     }
 
-    public List<ResultClass> runQ1(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
-        System.out.println("\n\n ----- RUNNING Q1 -----");
-        String fullQuery = "";
-        // runs the query
-        for (String s : query) {
-            fullQuery += s + " OR ";
-        }
-        fullQuery = fullQuery.substring(0, fullQuery.length()-3);
-        
+    public void runQs() throws java.io.FileNotFoundException,java.io.IOException {
+        System.out.println("\n\n ----- RUNNING Q -----");
 
-        return runQueries(fullQuery);
+        Scanner userInput = new Scanner(System.in);
+        
+        System.out.println("Please enter a query (or STOP)\n");
+        String q = userInput.nextLine();
+
+        while (!q.equals("STOP")) {
+            String[] query = q.split(" ");
+
+            String fullQuery = "";
+            for (String s : query) {
+                fullQuery += s + " OR ";
+            }
+            fullQuery = fullQuery.substring(0, fullQuery.length()-3);
+
+            // System.out.println("You entered the query: " + fullQuery);
+            runQueries(fullQuery);
+
+            System.out.println("Please enter a query (or STOP)\n");
+            q = userInput.nextLine();
+        }
+        userInput.close();
+        return;
     }
 
 
@@ -146,13 +159,14 @@ public class QueryEngine {
      */
     public List<ResultClass> runQueries(String fullQuery) {
         List<ResultClass> ans = new ArrayList<ResultClass>();
+        int numHits = 20;
 
         try {
             Query q = new QueryParser("text", analyzer).parse(fullQuery);
 
             IndexReader reader = DirectoryReader.open(index);
             IndexSearcher searcher = new IndexSearcher(reader);
-            int numHits = searcher.count(q);
+            
             if (numHits == 0) {
                 return null;
             }
@@ -168,22 +182,36 @@ public class QueryEngine {
                 result.DocName = d;
                 result.docScore = hits[i].score;
                 ans.add(result);
-                // System.out.println("The document: " + result.DocName.get("docName") + " had a score of: " + result.docScore);
+                System.out.println("The document: " + result.DocName.get("docName") + " had a score of: " + result.docScore);
             }
 
             // Sort the result documents and print out the top k
-            int k = 20;
-            Collections.sort(ans);
-            for (int i = 0; i < k; i++) {
-                int numDocs = ans.size() - 1;
-                ResultClass result = ans.get(numDocs - i);
-                System.out.println("The document: " + result.DocName.get("docName") + " had a score of: " + result.docScore);
-            }
+            // int k = 20;
+            // Collections.sort(ans);
+            // for (int i = 0; i < k; i++) {
+            //     int numDocs = ans.size() - 1;
+            //     ResultClass result = ans.get(numDocs - i);
+            //     System.out.println("The document: " + result.DocName.get("docName") + " had a score of: " + result.docScore);
+            // }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         return ans;
+    }
+
+
+    public List<ResultClass> runQ1(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
+        System.out.println("\n\n ----- RUNNING Q1 -----");
+        String fullQuery = "";
+        // runs the query
+        for (String s : query) {
+            fullQuery += s + " OR ";
+        }
+        fullQuery = fullQuery.substring(0, fullQuery.length()-3);
+        
+
+        return runQueries(fullQuery);
     }
 
     public List<ResultClass> oldQs(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
