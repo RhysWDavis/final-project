@@ -1,0 +1,8 @@
+Libraries to be installed:
+    numpy
+    pandas
+    torch
+    rank_bm25 (pip install rank_bm25)
+    sklearn.feature_extraction  (pip install scikit-learn)
+    nltk (pip install --user -U nltk)
+    sentence_tranformers (pip install -U sentence-transformers)

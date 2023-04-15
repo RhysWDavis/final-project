@@ -17,7 +17,6 @@ public class FilesParser {
         FilesParser fp = new FilesParser(path);
     }
 
-
     public FilesParser(String path) {
         // Gets the contents of the directory passed in
         File dir = new File(path);
@@ -26,10 +25,10 @@ public class FilesParser {
 
         // Checks to make sure the directory containing the wiki files exists
         if (!dirContent.contains("wiki-subset-20140602")) {
-            System.out.println("The directory \"wiki-subset-20140602\" could not be found in" 
-                + "the path given.\n Please enter a valid directory path.\n");
+            System.out.println("The directory \"wiki-subset-20140602\" could not be found in"
+                    + "the path given.\n Please enter a valid directory path.\n");
         }
-        
+
         // Loop over all wiki files in the directory (there should be 80 of them)
         int i = 0;
         File longWikiDir = new File(path + "/wiki-subset-20140602");
@@ -39,20 +38,21 @@ public class FilesParser {
             if (!longWikiFileName.endsWith(".txt")) {
                 continue;
             }
-            
+
             // Create new directory for the shortened files to go
             String shortDirPath = path + "/wiki-subset-20140602-shortened";
-            new File(shortDirPath).mkdirs();  // does not overwrite dir if it already exists
+            new File(shortDirPath).mkdirs(); // does not overwrite dir if it already exists
 
             // Get the longWikiFilePath and shortWikiFilePath
             String longWikiFilePath = longWikiDir.getAbsolutePath() + "/" + longWikiFileName;
 
-            String shortWikiFileName = longWikiFileName.substring(0, longWikiFileName.
-                length() - 4) + "_last_paragraph.txt";
+            String shortWikiFileName = longWikiFileName.substring(0, longWikiFileName.length() - 4)
+                    + "_last_paragraph.txt";
             String shortWikiFilePath = shortDirPath + "/" + shortWikiFileName;
 
             // Shorten the files, sending the shortened version to the newDir just created
-            // System.out.println("From: " + longWikiFilePath + "\nTo: " + shortWikiFilePath + "\n");
+            // System.out.println("From: " + longWikiFilePath + "\nTo: " + shortWikiFilePath
+            // + "\n");
             createShortenedFile(longWikiFilePath, shortWikiFilePath);
             i++;
         }
@@ -63,16 +63,15 @@ public class FilesParser {
         }
     }
 
-
     /**
      * Reads in an input file, following the format of Mihai's wikipedia collection,
      * and creates a new file containing only the title and first paragraph (or so)
      * of text per wikipedia article.
      * 
-     * @param args - index 0 should be the path to the desired file to parse. 
+     * @param args - index 0 should be the path to the desired file to parse.
      */
     public void createShortenedFile(String fileToShorten, String shortenedFileName) {
-        try {            
+        try {
             File fileToWrite = new File(shortenedFileName);
             FileWriter writerFile = new FileWriter(fileToWrite);
             parseFile(fileToShorten, writerFile);
@@ -86,12 +85,12 @@ public class FilesParser {
 
     /**
      * 
-     * @param input - a scanner object to read in the lines of the input file
+     * @param input      - a scanner object to read in the lines of the input file
      * @param writerFile - the FileWriter object to write to
      * @throws IOException
      */
     private void parseFile(String inputFileName, FileWriter writerFile) throws IOException {
-        try (BufferedReader input = new BufferedReader(new FileReader(inputFileName))) { 
+        try (BufferedReader input = new BufferedReader(new FileReader(inputFileName))) {
             String line = "";
             boolean isBreak = false;
             while ((line = input.readLine()) != null) {
@@ -119,14 +118,14 @@ public class FilesParser {
     }
 
     public void generateArticleTitles(String inputFileName, FileWriter writerFile) throws IOException {
-        try (BufferedReader input = new BufferedReader(new FileReader(inputFileName))) { 
+        try (BufferedReader input = new BufferedReader(new FileReader(inputFileName))) {
             String line = "";
-            while ((line = input.readLine()) != null) { 
+            while ((line = input.readLine()) != null) {
                 if (line.startsWith("[[") && line.endsWith("]]")) {
                     writerFile.write(line + "\n");
                 }
                 // if (line.contains("[[")) {
-                //     writerFile.write(line + "\n");
+                // writerFile.write(line + "\n");
                 // }
             }
         }

@@ -35,25 +35,27 @@ public class QueryEngine {
     Directory index;
     Analyzer analyzer = new StandardAnalyzer();
 
-    public static void main(String[] args ) {
+    public static void main(String[] args) {
         try {
             String path = "/Users/lilbig/Desktop/483_final_project";
             QueryEngine objQueryEngine = new QueryEngine(path);
-            
-            //String whole_q = "The dominant paper in our nation's capital, it's among the top 10 U.S. papers in circulation";
-            // String whole_q = "This woman who won consecutive heptathlons at the Olympics went to UCLA on a basketball scholarship";
-            // String whole_q = "One of the N.Y. Times' headlines on this landmark 1973 Supreme Court decision was \"Cardinals shocked\"";
+
+            // String whole_q = "The dominant paper in our nation's capital, it's among the
+            // top 10 U.S. papers in circulation";
+            // String whole_q = "This woman who won consecutive heptathlons at the Olympics
+            // went to UCLA on a basketball scholarship";
+            // String whole_q = "One of the N.Y. Times' headlines on this landmark 1973
+            // Supreme Court decision was \"Cardinals shocked\"";
             // String[] test_query = whole_q.split(" ");
             // List<ResultClass> q = objQueryEngine.runQ1(test_query);
 
             objQueryEngine.runQs();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
 
-    public QueryEngine(String filesDir){
+    public QueryEngine(String filesDir) {
         inputDirPath = filesDir;
 
         buildIndex();
@@ -67,13 +69,13 @@ public class QueryEngine {
      */
     private void buildIndex() {
         System.out.println("********Index creation starting.");
-        //Get file from resources folder
+        // Get file from resources folder
         // ClassLoader classLoader = getClass().getClassLoader();
         // File file = new File(classLoader.getResource(inputFilePath).getFile());
         File dir = new File(inputDirPath + "/wiki-subset-20140602-shortened");
         String[] dirContentTemp = dir.list();
         List<String> dirContent = Arrays.asList(dirContentTemp);
-        
+
         try {
             Path path = Paths.get("src/main/java/edu/arizona/cs/");
 
@@ -87,7 +89,7 @@ public class QueryEngine {
             for (String wikiFileName : dirContent) {
                 String wikiFilePath = dir.getAbsolutePath() + "/" + wikiFileName;
                 try (Scanner inputScanner = new Scanner(new File(wikiFilePath))) {
-                
+
                     // Adds each line of the input file to the index as a new document
                     String line;
                     int numDocs = 0;
@@ -97,7 +99,7 @@ public class QueryEngine {
 
                         String text = "";
                         if (line.startsWith("[[")) {
-                            doc.add(new StringField("docName", line.substring(2, line.length()-2), Field.Store.YES));
+                            doc.add(new StringField("docName", line.substring(2, line.length() - 2), Field.Store.YES));
                             while (inputScanner.hasNextLine()) {
                                 line = inputScanner.nextLine();
                                 if (line.equals("End of paragraph.[]")) {
@@ -118,15 +120,16 @@ public class QueryEngine {
                 }
             }
             w.close();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         indexExists = true;
     }
 
-    public void runQs() throws java.io.FileNotFoundException,java.io.IOException {
+    public void runQs() throws java.io.FileNotFoundException, java.io.IOException {
         System.out.println("\n\n ----- RUNNING Q -----");
 
         Scanner userInput = new Scanner(System.in);
-        
+
         System.out.println("Please enter a query (or STOP)\n");
         String q = userInput.nextLine();
 
@@ -137,7 +140,7 @@ public class QueryEngine {
             for (String s : query) {
                 fullQuery += s + " OR ";
             }
-            fullQuery = fullQuery.substring(0, fullQuery.length()-3);
+            fullQuery = fullQuery.substring(0, fullQuery.length() - 3);
 
             // System.out.println("You entered the query: " + fullQuery);
             runQueries(fullQuery);
@@ -149,9 +152,9 @@ public class QueryEngine {
         return;
     }
 
-
     /**
-     * Performs the functionality of giving a query to the index, obtaining the results,
+     * Performs the functionality of giving a query to the index, obtaining the
+     * results,
      * and printing out and returning some of them.
      * 
      * @param fullQuery - The exact query to be passed to the index
@@ -166,14 +169,15 @@ public class QueryEngine {
 
             IndexReader reader = DirectoryReader.open(index);
             IndexSearcher searcher = new IndexSearcher(reader);
-            
+
             if (numHits == 0) {
                 return null;
             }
             TopDocs docs = searcher.search(q, numHits);
             ScoreDoc[] hits = docs.scoreDocs;
 
-            // For each document matching the query, add it to the list and print out some info
+            // For each document matching the query, add it to the list and print out some
+            // info
             for (int i = 0; i < hits.length; ++i) {
                 int docID = hits[i].doc;
                 Document d = searcher.doc(docID);
@@ -182,16 +186,18 @@ public class QueryEngine {
                 result.DocName = d;
                 result.docScore = hits[i].score;
                 ans.add(result);
-                System.out.println("The document: " + result.DocName.get("docName") + " had a score of: " + result.docScore);
+                System.out.println(
+                        "The document: " + result.DocName.get("docName") + " had a score of: " + result.docScore);
             }
 
             // Sort the result documents and print out the top k
             // int k = 20;
             // Collections.sort(ans);
             // for (int i = 0; i < k; i++) {
-            //     int numDocs = ans.size() - 1;
-            //     ResultClass result = ans.get(numDocs - i);
-            //     System.out.println("The document: " + result.DocName.get("docName") + " had a score of: " + result.docScore);
+            // int numDocs = ans.size() - 1;
+            // ResultClass result = ans.get(numDocs - i);
+            // System.out.println("The document: " + result.DocName.get("docName") + " had a
+            // score of: " + result.docScore);
             // }
 
         } catch (Exception e) {
@@ -200,21 +206,19 @@ public class QueryEngine {
         return ans;
     }
 
-
-    public List<ResultClass> runQ1(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
+    public List<ResultClass> runQ1(String[] query) throws java.io.FileNotFoundException, java.io.IOException {
         System.out.println("\n\n ----- RUNNING Q1 -----");
         String fullQuery = "";
         // runs the query
         for (String s : query) {
             fullQuery += s + " OR ";
         }
-        fullQuery = fullQuery.substring(0, fullQuery.length()-3);
-        
+        fullQuery = fullQuery.substring(0, fullQuery.length() - 3);
 
         return runQueries(fullQuery);
     }
 
-    public List<ResultClass> oldQs(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
+    public List<ResultClass> oldQs(String[] query) throws java.io.FileNotFoundException, java.io.IOException {
         System.out.println("\n\n ----- RUNNING Q1_1 -----");
 
         // runs the query: information retrieval
