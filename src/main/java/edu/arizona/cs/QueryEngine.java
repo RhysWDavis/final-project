@@ -46,14 +46,13 @@ public class QueryEngine {
             QueryEngine objQueryEngine = new QueryEngine(path);
             objQueryEngine.getJQuestions(path);
 
-            // objQueryEngine.runQs();
-            objQueryEngine.checkExistence();
+            
+            objQueryEngine.runAllJQuestions(10);    // Give it how many results you want to see
 
-            //String whole_q = "The dominant paper in our nation's capital, it's among the top 10 U.S. papers in circulation";
-            // String whole_q = "This woman who won consecutive heptathlons at the Olympics went to UCLA on a basketball scholarship";
-            // String whole_q = "One of the N.Y. Times' headlines on this landmark 1973 Supreme Court decision was \"Cardinals shocked\"";
-            // String[] test_query = whole_q.split(" ");
-            // List<ResultClass> q = objQueryEngine.runQ1(test_query);
+            // objQueryEngine.runQs();         // Use this if you want to manually type in queries
+
+            // objQueryEngine.checkExistence();     // Checks to see if the answer wikipedia
+                                                    // documents even exist in our collection
         }
         catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -208,6 +207,35 @@ public class QueryEngine {
         return runQueries(fullQuery, 20);
     }
 
+    /**
+     * Runs the index on all 100 jeopardy questions.
+     * 
+     * Must call getJQuestions(String path) before this method.
+     */
+    public void runAllJQuestions(int numHits) {
+
+        // Loop over all jeopardy questions
+        for (String[] jQ : jQuestions) {
+            String tempQ = jQ[Q_INDEX];
+            tempQ = tempQ.replace(":", "");
+            tempQ = tempQ.replace("\"", "");
+            
+            String[] query = tempQ.split(" ");
+
+            String fullQuery = "";
+            for (String s : query) {
+                fullQuery += s + " OR ";
+            }
+            fullQuery = fullQuery.substring(0, fullQuery.length()-3);
+
+            // System.out.println("You entered the query: " + fullQuery);
+
+            System.out.println("Printing the answers to query " + jQ[Q_INDEX]);
+            runQueries(fullQuery, numHits);
+            System.out.println("\n\n");
+        }
+    }
+    public void runAllJQuestions() { runAllJQuestions(10); }
 
     /**
      * Checks to see if there is a wikipedia article with the same title
@@ -219,7 +247,11 @@ public class QueryEngine {
 
         // Loop over all jeopardy questions
         for (String[] jQ : jQuestions) {
-            String[] query = jQ[ANS_INDEX].split(" ");
+            String tempQ = jQ[ANS_INDEX];
+            tempQ = tempQ.replace(":", "");
+            tempQ = tempQ.replace("\"", "");
+            
+            String[] query = tempQ.split(" ");
 
             String fullQuery = "";
             for (String s : query) {
