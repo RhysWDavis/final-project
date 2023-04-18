@@ -35,12 +35,11 @@ public class QueryEngine {
     private Directory index;
     private Analyzer analyzer = new StandardAnalyzer();
     private ArrayList<String[]> jQuestions;
-    private static final int CAT_INDEX = 0; 
-    private static final int Q_INDEX = 1; 
-    private static final int ANS_INDEX = 2; 
+    private static final int CAT_INDEX = 0;
+    private static final int Q_INDEX = 1;
+    private static final int ANS_INDEX = 2;
 
-
-    public static void main(String[] args ) {
+    public static void main(String[] args) {
         try {
             String path = "/Users/lilbig/Desktop/483_final_project";
             QueryEngine objQueryEngine = new QueryEngine(path);
@@ -59,7 +58,7 @@ public class QueryEngine {
         }
     }
 
-    public QueryEngine(String filesDir){
+    public QueryEngine(String filesDir) {
         inputDirPath = filesDir;
 
         buildIndex();
@@ -73,13 +72,13 @@ public class QueryEngine {
      */
     private void buildIndex() {
         System.out.println("********Index creation starting.");
-        //Get file from resources folder
+        // Get file from resources folder
         // ClassLoader classLoader = getClass().getClassLoader();
         // File file = new File(classLoader.getResource(inputFilePath).getFile());
         File dir = new File(inputDirPath + "/wiki-subset-20140602-shortened");
         String[] dirContentTemp = dir.list();
         List<String> dirContent = Arrays.asList(dirContentTemp);
-        
+
         try {
             Path path = Paths.get("src/main/java/edu/arizona/cs/");
 
@@ -93,7 +92,7 @@ public class QueryEngine {
             for (String wikiFileName : dirContent) {
                 String wikiFilePath = dir.getAbsolutePath() + "/" + wikiFileName;
                 try (Scanner inputScanner = new Scanner(new File(wikiFilePath))) {
-                
+
                     // Adds each line of the input file to the index as a new document
                     String line;
                     int numDocs = 0;
@@ -103,7 +102,7 @@ public class QueryEngine {
 
                         String text = "";
                         if (line.startsWith("[[")) {
-                            doc.add(new StringField("docName", line.substring(2, line.length()-2), Field.Store.YES));
+                            doc.add(new StringField("docName", line.substring(2, line.length() - 2), Field.Store.YES));
                             while (inputScanner.hasNextLine()) {
                                 line = inputScanner.nextLine();
                                 if (line.equals("End of paragraph.[]")) {
@@ -124,15 +123,16 @@ public class QueryEngine {
                 }
             }
             w.close();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         indexExists = true;
     }
 
-    public void runQs() throws java.io.FileNotFoundException,java.io.IOException {
+    public void runQs() throws java.io.FileNotFoundException, java.io.IOException {
         System.out.println("\n\n ----- RUNNING Q -----");
 
         Scanner userInput = new Scanner(System.in);
-        
+
         System.out.println("Please enter a query (or STOP)\n");
         String q = userInput.nextLine();
 
@@ -143,7 +143,7 @@ public class QueryEngine {
             for (String s : query) {
                 fullQuery += s + " OR ";
             }
-            fullQuery = fullQuery.substring(0, fullQuery.length()-3);
+            fullQuery = fullQuery.substring(0, fullQuery.length() - 3);
 
             // System.out.println("You entered the query: " + fullQuery);
             runQueries(fullQuery);
@@ -154,9 +154,9 @@ public class QueryEngine {
         userInput.close();
     }
 
-
     /**
-     * Performs the functionality of giving a query to the index, obtaining the results,
+     * Performs the functionality of giving a query to the index, obtaining the
+     * results,
      * and printing out and returning some of them.
      * 
      * @param fullQuery - The exact query to be passed to the index
@@ -170,14 +170,15 @@ public class QueryEngine {
 
             IndexReader reader = DirectoryReader.open(index);
             IndexSearcher searcher = new IndexSearcher(reader);
-            
+
             if (numHits == 0) {
                 return null;
             }
             TopDocs docs = searcher.search(q, numHits);
             ScoreDoc[] hits = docs.scoreDocs;
 
-            // For each document matching the query, add it to the list and print out some info
+            // For each document matching the query, add it to the list and print out some
+            // info
             for (int i = 0; i < hits.length; ++i) {
                 int docID = hits[i].doc;
                 Document d = searcher.doc(docID);
@@ -257,7 +258,7 @@ public class QueryEngine {
             for (String s : query) {
                 fullQuery += s + " OR ";
             }
-            fullQuery = fullQuery.substring(0, fullQuery.length()-3);
+            fullQuery = fullQuery.substring(0, fullQuery.length() - 3);
 
             // System.out.println("You entered the query: " + fullQuery);
 
@@ -273,6 +274,7 @@ public class QueryEngine {
      * A[0] = the category, use catIndex
      * A[1] = the question itself, use qIndex
      * A[2] = the answer to the question, use ansIndex
+     * 
      * @param path
      */
     public void getJQuestions(String path) {
@@ -283,33 +285,31 @@ public class QueryEngine {
                 String category = jQuestionsFile.nextLine();
                 String question = jQuestionsFile.nextLine();
                 String answer = jQuestionsFile.nextLine();
-                jQuestionsFile.nextLine();  // Skips the empty line that follows
+                jQuestionsFile.nextLine(); // Skips the empty line that follows
 
-                String[] q = {category, question, answer};
+                String[] q = { category, question, answer };
                 jQuestions.add(q);
             }
             jQuestionsFile.close();
         } catch (FileNotFoundException e) {
             System.out.println("Jeopardy questions file not found. Critical error.\n");
         }
-        System.out.println("Generated " + jQuestions.size()+ " jeopardy questions.\n");
+        System.out.println("Generated " + jQuestions.size() + " jeopardy questions.\n");
     }
 
-
-    public List<ResultClass> runQ1(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
+    public List<ResultClass> runQ1(String[] query) throws java.io.FileNotFoundException, java.io.IOException {
         System.out.println("\n\n ----- RUNNING Q1 -----");
         String fullQuery = "";
         // runs the query
         for (String s : query) {
             fullQuery += s + " OR ";
         }
-        fullQuery = fullQuery.substring(0, fullQuery.length()-3);
-        
+        fullQuery = fullQuery.substring(0, fullQuery.length() - 3);
 
         return runQueries(fullQuery);
     }
 
-    public List<ResultClass> oldQs(String[] query) throws java.io.FileNotFoundException,java.io.IOException {
+    public List<ResultClass> oldQs(String[] query) throws java.io.FileNotFoundException, java.io.IOException {
         System.out.println("\n\n ----- RUNNING Q1_1 -----");
 
         // runs the query: information retrieval
