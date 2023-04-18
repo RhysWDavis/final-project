@@ -15,6 +15,7 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.similarities.LMDirichletSimilarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
@@ -28,20 +29,22 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
-// @SuppressWarnings("unused")
+@SuppressWarnings("unused")
 public class QueryEngine {
     private boolean indexExists = false;
     private String inputDirPath = "";
     private Directory index;
     private Analyzer analyzer = new StandardAnalyzer();
     private ArrayList<String[]> jQuestions;
+    private float reciprocalRankSum = 0;
+    private int numCorrect = 0;
     private static final int CAT_INDEX = 0;
     private static final int Q_INDEX = 1;
     private static final int ANS_INDEX = 2;
 
     public static void main(String[] args) {
         try {
-            String path = "/Users/lilbig/Desktop/483_final_project";
+            String path = "/Users/sgrim/Desktop/483_final_project";
             QueryEngine objQueryEngine = new QueryEngine(path);
             objQueryEngine.getJQuestions(path);
 
@@ -60,7 +63,6 @@ public class QueryEngine {
 
     public QueryEngine(String filesDir) {
         inputDirPath = filesDir;
-
         buildIndex();
     }
 
@@ -85,6 +87,8 @@ public class QueryEngine {
             // analyzer = new StandardAnalyzer();
             index = FSDirectory.open(path);
             IndexWriterConfig config = new IndexWriterConfig(analyzer);
+            LMDirichletSimilarity similar = new LMDirichletSimilarity();
+            config.setSimilarity(similar);
             config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
             IndexWriter w = new IndexWriter(index, config);
             w.deleteAll();
@@ -146,7 +150,7 @@ public class QueryEngine {
             fullQuery = fullQuery.substring(0, fullQuery.length() - 3);
 
             // System.out.println("You entered the query: " + fullQuery);
-            runQueries(fullQuery);
+            runQueries(fullQuery, q);
 
             System.out.println("Please enter a query (or STOP)\n");
             q = userInput.nextLine();
@@ -162,15 +166,15 @@ public class QueryEngine {
      * @param fullQuery - The exact query to be passed to the index
      * @return a list of ResultClass objects of each document matching the fullQuery
      */
-    public List<ResultClass> runQueries(String fullQuery, int numHits) {
+    public List<ResultClass> runQueries(String fullQuery, int numHits, String answer) {
         List<ResultClass> ans = new ArrayList<ResultClass>();
 
         try {
             Query q = new QueryParser("text", analyzer).parse(fullQuery);
-
             IndexReader reader = DirectoryReader.open(index);
             IndexSearcher searcher = new IndexSearcher(reader);
-
+            LMDirichletSimilarity similar = new LMDirichletSimilarity();
+            searcher.setSimilarity(similar);
             if (numHits == 0) {
                 return null;
             }
@@ -188,7 +192,33 @@ public class QueryEngine {
                 result.docScore = hits[i].score;
                 ans.add(result);
                 double score = Math.round(result.docScore * 1000d) / 1000d;
-                System.out.println("The document: " + result.DocName.get("docName") + " had a score of: " + score);
+                float rank = (float) 1 / (float) (i + 1);
+                if (result.DocName.get("docName").equals(answer.trim())) {
+                    if (i == 0) {
+                        numCorrect++;
+                    }
+                    this.reciprocalRankSum += rank;
+                    System.out.println("The document: " + result.DocName.get("docName") + " had a score of: " + score
+                            + " the reciprocal rank is " + String.valueOf(rank));
+                } else if (answer.contains("|")) {
+                    String[] answers = answer.split("\\|", 2);
+                    if (result.DocName.get("docName").equals(answers[0].trim())
+                            || result.DocName.get("docName").equals(answers[1].trim())) {
+                        System.out
+                                .println("The document: " + result.DocName.get("docName") + " had a score of: " + score
+                                        + " the reciprocal rank is " + String.valueOf(rank));
+                        this.reciprocalRankSum += rank;
+                        if (i == 0) {
+                            numCorrect++;
+                        }
+                    } else {
+                        System.out.println(
+                                "The document: " + result.DocName.get("docName") + " had a score of: " + score);
+                    }
+
+                } else {
+                    System.out.println("The document: " + result.DocName.get("docName") + " had a score of: " + score);
+                }
             }
 
         } catch (Exception e) {
@@ -204,8 +234,8 @@ public class QueryEngine {
      * @param fullQuery
      * @return
      */
-    public List<ResultClass> runQueries(String fullQuery) {
-        return runQueries(fullQuery, 20);
+    public List<ResultClass> runQueries(String fullQuery, String answer) {
+        return runQueries(fullQuery, 20, answer);
     }
 
     /**
@@ -232,7 +262,7 @@ public class QueryEngine {
             // System.out.println("You entered the query: " + fullQuery);
 
             System.out.println("Printing the answers to query " + jQ[Q_INDEX]);
-            runQueries(fullQuery, numHits);
+            runQueries(fullQuery, numHits, jQ[ANS_INDEX);
             System.out.println("\n\n");
         }
     }
@@ -263,10 +293,15 @@ public class QueryEngine {
             // System.out.println("You entered the query: " + fullQuery);
 
             System.out.println("Printing the answers to query " + jQ[ANS_INDEX]);
-            runQueries(fullQuery, 5);
+            runQueries(fullQuery, jQ[ANS_INDEX]);
             System.out.println("\n\n");
         }
+        System.out.println("Mean Reciprical Rank: " + String.valueOf(reciprocalRankSum / jQuestions.size()));
+        System.out.println(String.valueOf(numCorrect) + " out of " + String.valueOf(jQuestions.size())
+                + " questions were answered correctly");
     }
+
+  
 
     /**
      * Reads the questions.txt file from the directory and creates an ArrayList of
@@ -295,33 +330,6 @@ public class QueryEngine {
             System.out.println("Jeopardy questions file not found. Critical error.\n");
         }
         System.out.println("Generated " + jQuestions.size() + " jeopardy questions.\n");
-    }
-
-    public List<ResultClass> runQ1(String[] query) throws java.io.FileNotFoundException, java.io.IOException {
-        System.out.println("\n\n ----- RUNNING Q1 -----");
-        String fullQuery = "";
-        // runs the query
-        for (String s : query) {
-            fullQuery += s + " OR ";
-        }
-        fullQuery = fullQuery.substring(0, fullQuery.length() - 3);
-
-        return runQueries(fullQuery);
-    }
-
-    public List<ResultClass> oldQs(String[] query) throws java.io.FileNotFoundException, java.io.IOException {
-        System.out.println("\n\n ----- RUNNING Q1_1 -----");
-
-        // runs the query: information retrieval
-        String fullQuery = query[0] + " " + query[1];
-        // runs the query: information AND retrieval
-        fullQuery = query[0] + " AND " + query[1];
-        // runs the query: information AND NOT retrieval
-        fullQuery = query[0] + " NOT " + query[1];
-        // runs the query: "information retrieval" (occurring with no words in between)
-        fullQuery = "\"" + query[0] + " " + query[1] + "\"~1";
-
-        return runQueries(fullQuery);
     }
 
 }
