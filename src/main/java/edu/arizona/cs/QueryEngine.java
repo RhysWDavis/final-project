@@ -48,10 +48,15 @@ public class QueryEngine {
             QueryEngine objQueryEngine = new QueryEngine(path);
             objQueryEngine.getJQuestions(path);
 
-            // objQueryEngine.runQs();
-            objQueryEngine.checkJQuestions();
-            // objQueryEngine.checkExistence();
-        } catch (Exception ex) {
+            
+            objQueryEngine.runAllJQuestions(10);    // Give it how many results you want to see
+
+            // objQueryEngine.runQs();         // Use this if you want to manually type in queries
+
+            // objQueryEngine.checkExistence();     // Checks to see if the answer wikipedia
+                                                    // documents even exist in our collection
+        }
+        catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -234,6 +239,36 @@ public class QueryEngine {
     }
 
     /**
+     * Runs the index on all 100 jeopardy questions.
+     * 
+     * Must call getJQuestions(String path) before this method.
+     */
+    public void runAllJQuestions(int numHits) {
+
+        // Loop over all jeopardy questions
+        for (String[] jQ : jQuestions) {
+            String tempQ = jQ[Q_INDEX];
+            tempQ = tempQ.replace(":", "");
+            tempQ = tempQ.replace("\"", "");
+            
+            String[] query = tempQ.split(" ");
+
+            String fullQuery = "";
+            for (String s : query) {
+                fullQuery += s + " OR ";
+            }
+            fullQuery = fullQuery.substring(0, fullQuery.length()-3);
+
+            // System.out.println("You entered the query: " + fullQuery);
+
+            System.out.println("Printing the answers to query " + jQ[Q_INDEX]);
+            runQueries(fullQuery, numHits, jQ[ANS_INDEX);
+            System.out.println("\n\n");
+        }
+    }
+    public void runAllJQuestions() { runAllJQuestions(10); }
+
+    /**
      * Checks to see if there is a wikipedia article with the same title
      * as the answer of a jeopardy question, for all jeopardy questions.
      * 
@@ -243,7 +278,11 @@ public class QueryEngine {
 
         // Loop over all jeopardy questions
         for (String[] jQ : jQuestions) {
-            String[] query = jQ[ANS_INDEX].split(" ");
+            String tempQ = jQ[ANS_INDEX];
+            tempQ = tempQ.replace(":", "");
+            tempQ = tempQ.replace("\"", "");
+            
+            String[] query = tempQ.split(" ");
 
             String fullQuery = "";
             for (String s : query) {
@@ -262,28 +301,7 @@ public class QueryEngine {
                 + " questions were answered correctly");
     }
 
-    public void checkJQuestions() {
-
-        // Loop over all jeopardy questions
-        for (String[] jQ : jQuestions) {
-            String[] query = jQ[Q_INDEX].split(" ");
-
-            String fullQuery = "";
-            for (String s : query) {
-                fullQuery += s + " OR ";
-            }
-            fullQuery = fullQuery.substring(0, fullQuery.length() - 3);
-
-            // System.out.println("You entered the query: " + fullQuery);
-
-            System.out.println("Printing the answers to query " + jQ[Q_INDEX]);
-            runQueries(fullQuery, 1000, jQ[ANS_INDEX]);
-            System.out.println("\n\n");
-        }
-        System.out.println("Mean Reciprical Rank: " + String.valueOf(reciprocalRankSum / jQuestions.size()));
-        System.out.println(String.valueOf(numCorrect) + " out of " + String.valueOf(jQuestions.size())
-                + " questions were answered correctly");
-    }
+  
 
     /**
      * Reads the questions.txt file from the directory and creates an ArrayList of
