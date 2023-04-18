@@ -44,7 +44,8 @@ public class QueryEngine {
 
     public static void main(String[] args) {
         try {
-            String path = "/Users/sgrim/Desktop/483_final_project";
+            // String path = "/Users/sgrim/Desktop/483_final_project";
+            String path = "/Users/lilbig/Desktop/483_final_project";
             QueryEngine objQueryEngine = new QueryEngine(path);
             objQueryEngine.getJQuestions(path);
 
@@ -265,6 +266,9 @@ public class QueryEngine {
             runQueries(fullQuery, numHits, jQ[ANS_INDEX]);
             System.out.println("\n\n");
         }
+        System.out.println("Mean Reciprical Rank: " + String.valueOf(reciprocalRankSum / jQuestions.size()));
+        System.out.println(String.valueOf(numCorrect) + " out of " + String.valueOf(jQuestions.size())
+                + " questions were answered correctly");
     }
     public void runAllJQuestions() { runAllJQuestions(10); }
 
