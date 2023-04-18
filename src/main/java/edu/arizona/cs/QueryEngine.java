@@ -262,7 +262,7 @@ public class QueryEngine {
             // System.out.println("You entered the query: " + fullQuery);
 
             System.out.println("Printing the answers to query " + jQ[Q_INDEX]);
-            runQueries(fullQuery, numHits, jQ[ANS_INDEX);
+            runQueries(fullQuery, numHits, jQ[ANS_INDEX]);
             System.out.println("\n\n");
         }
     }
