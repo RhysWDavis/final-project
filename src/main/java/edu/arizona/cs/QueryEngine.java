@@ -1,6 +1,7 @@
 package edu.arizona.cs;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -32,10 +33,9 @@ import java.util.Scanner;
 
 @SuppressWarnings("unused")
 public class QueryEngine {
-    private boolean indexExists = false;
     private String inputDirPath = "";
     private Directory index;
-    private Analyzer analyzer = new StandardAnalyzer();
+    private Analyzer analyzer = new EnglishAnalyzer();
     private ArrayList<String[]> jQuestions;
     private float reciprocalRankSum = 0;
     private int numCorrect = 0;
@@ -134,7 +134,6 @@ public class QueryEngine {
             w.close();
         } catch (Exception e) {
         }
-        indexExists = true;
     }
 
     public void runQs() throws java.io.FileNotFoundException, java.io.IOException {
