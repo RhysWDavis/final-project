@@ -22,19 +22,35 @@ auth_token = os.environ.get("auth_token")
 bi_encoder_type = "multi-qa-mpnet-base-dot-v1"
 
 top_k = 5
+top_k*=2
 
 path="/Users/karan/OneDrive/Desktop/college/483_final/wiki-subset-20140602-shortened"
 
+path2="/Users/karan/OneDrive/Desktop/outputsamp.txt"
+
+path3="/Users/karan/OneDrive/Desktop/inputsamp.txt"
+
+necessary=[]
 titles={}
 
 bm25,corpus_embeddings=None,None
+bi_encoder,  cross_encoder=None,None
 docs=[]
+
+def shorten():
+    fl2=open(path2,'r',encoding='utf-8')
+    txt=fl2.readlines()
+    for line in txt:
+        if line.startswith("The document"):
+            wrds = line.split()
+            end=wrds.index("had")
+            necessary.append(" ".join(wrds[2:end]))
+    fl2.close()
 
 # Extract text from all shortened wikipedia pages created by
 # FilesParser.java
 # path is the path to the files
 def extract_text_from_file():
-
     file_text=[]
     # Read all text files in directory
     my_files=glob.glob(path+"/*.txt")
@@ -42,11 +58,12 @@ def extract_text_from_file():
     for fl in my_files:
         with open(fl,'r',encoding='utf-8') as f:
             file_text+=  f.readlines()
+            f.close()
         
     return file_text
     
 def preprocess_plain_text(text,window_size=3):
-    
+    global necessary
     #break into lines and remove leading and trailing space on each
     lines = [line.strip() for line in text]
 
@@ -56,7 +73,7 @@ def preprocess_plain_text(text,window_size=3):
     doc_title=""
     doc_text=""
     while i<len(lines):
-        if(lines[i].startswith("[[")):
+        if lines[i].startswith("[[")and lines[i][2:-2] in necessary:
             doc_title=lines[i][2:-2]
             doc_text=""
             i+=1
@@ -70,6 +87,7 @@ def preprocess_plain_text(text,window_size=3):
                     i+=1
         else:
             i+=1
+            continue
         documents.append(doc_text)
         titles[doc_text]=doc_title
 
@@ -129,7 +147,10 @@ def bm25_api(passages):
 def display_df(model, top_k,score='score'):
     rnk=0
     for hit in model[0:top_k]:
-        print(str(rnk)+":"+titles[docs[hit['corpus_id']]]+"-score " +str(hit[score]))
+        try:
+            print(str(rnk+1)+":"+titles[docs[hit['corpus_id']]]+"-score " +str(hit[score]))
+        except:
+            print("something went wrong")
         rnk+=1
 
 # This function will search all wikipedia articles for passages that
@@ -145,15 +166,15 @@ def search_func(query, bi_encoder_type, top_k=top_k):
     bm25_hits = [{'corpus_id': idx, 'score': bm25_scores[idx]} for idx in top_n]
     bm25_hits = sorted(bm25_hits, key=lambda x: x['score'], reverse=True)
     
-    print("Top-"+str(top_k)+" lexical search (BM25) hits")
+    #print("Top-"+str(top_k)+" lexical search (BM25) hits")
     
-    bm25_df = display_df(bm25_hits,top_k)
+   # bm25_df = display_df(bm25_hits,top_k)
 
     if bi_encoder_type == 'intfloat/e5-base':
         query = 'query: ' + query
     ##### Sematic Search #####
     # Encode the query using the bi-encoder and find potentially relevant passages
-    question_embedding = bi_encoder.encode(query, convert_to_tensor=True)
+    question_embedding = bi_encoder.encode(query, convert_to_tensor=True) # type: ignore
     question_embedding = question_embedding.cpu() # type: ignore
     hits = util.semantic_search(question_embedding, corpus_embeddings, top_k=top_k,score_function=util.dot_score) # type: ignore
     hits = hits[0]  # Get the hits for the first query
@@ -161,26 +182,31 @@ def search_func(query, bi_encoder_type, top_k=top_k):
     ##### Re-Ranking #####
     # Now, score all retrieved passages with the cross_encoder
     cross_inp = [[query, docs[hit['corpus_id']]] for hit in hits]
-    cross_scores = cross_encoder.predict(cross_inp)
-
+    cross_scores = cross_encoder.predict(cross_inp) # type: ignore
+    #print("\nTop-"+str(top_k)+" bi-encoder hits")
     # Sort results by the cross-encoder scores
     for idx in range(len(cross_scores)):
-        hits[idx]['cross-score'] = cross_scores[idx]
+        hits[idx]['cross-score'] = cross_scores[idx] # type: ignore
 
     # Output of top-k hits from bi-encoder
     hits = sorted(hits, key=lambda x: x['score'], reverse=True) # type: ignore
-    
-    cross_df = display_df(hits,top_k)
+    #cross_df = display_df(hits,top_k)
 
     # Output of top-3 hits from re-ranker
     hits = sorted(hits, key=lambda x: x['cross-score'], reverse=True)
-    
+    print("Top-"+str(top_k)+" re-ranked cross encoder scores")
     rerank_df = display_df(hits,top_k,'cross-score')
 
 
+import time
 
 def main():
     global bm25
+    global docs, bi_encoder, corpus_embeddings, cross_encoder
+    t=time.localtime()
+    current_time=time.strftime("%H:%M:%S",t)
+    print(current_time)
+    shorten()
     text = extract_text_from_file()
 
     docs=preprocess_plain_text(text)
@@ -192,10 +218,21 @@ def main():
     bm25 = bm25_api(docs)
 
     print("All Embeddings completed")
+    t=time.localtime()
+    current_time=time.strftime("%H:%M:%S",t)
+    print(current_time)
+    flag=False
 
-    while(True):
-        search_query=input("Enter a Jeopardy question")
-        search_func(search_query,bi_encoder_type,top_k)
+    if(flag):
+        f3=open(path3,'r',encoding='utf-8')
+        ff=f3.readlines()
+        for ln in ff:
+            print(ln)
+            search_func(ln,bi_encoder_type,top_k)
+    else:
+        while(True):
+            search_query=input("Enter a Jeopardy question\n")
+            search_func(search_query,bi_encoder_type,top_k)
 
 if __name__=="__main__":
     main()
