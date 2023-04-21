@@ -1,6 +1,7 @@
 package edu.arizona.cs;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -32,10 +33,9 @@ import java.util.Scanner;
 
 @SuppressWarnings("unused")
 public class QueryEngine {
-    private boolean indexExists = false;
     private String inputDirPath = "";
     private Directory index;
-    private Analyzer analyzer = new StandardAnalyzer();
+    private Analyzer analyzer = new EnglishAnalyzer();
     private ArrayList<String[]> jQuestions;
     private float reciprocalRankSum = 0;
     private int numCorrect = 0;
@@ -53,9 +53,9 @@ public class QueryEngine {
 
             File fileToWrite = new File("output.txt");
             file = new FileWriter(fileToWrite);
-            objQueryEngine.runAllJQuestions(100);    // Give it how many results you want to see
+            // objQueryEngine.runAllJQuestions(100);    // Give it how many results you want to see
 
-            // objQueryEngine.runQs();         // Use this if you want to manually type in queries
+            objQueryEngine.runQs();         // Use this if you want to manually type in queries
 
             // objQueryEngine.checkExistence();     // Checks to see if the answer wikipedia
                                                     // documents even exist in our collection
@@ -134,7 +134,6 @@ public class QueryEngine {
             w.close();
         } catch (Exception e) {
         }
-        indexExists = true;
     }
 
     public void runQs() throws java.io.FileNotFoundException, java.io.IOException {
@@ -146,6 +145,8 @@ public class QueryEngine {
         String q = userInput.nextLine();
 
         while (!q.equals("STOP")) {
+            q = q.replace(":", "");
+            q = q.replace("\"", "");
             String[] query = q.split(" ");
 
             String fullQuery = "";
@@ -155,7 +156,7 @@ public class QueryEngine {
             fullQuery = fullQuery.substring(0, fullQuery.length() - 3);
 
             // System.out.println("You entered the query: " + fullQuery);
-            runQueries(fullQuery, q);
+            runQueries(fullQuery, 1000, q);
 
             System.out.println("Please enter a query (or STOP)\n");
             q = userInput.nextLine();
