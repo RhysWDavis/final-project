@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-@SuppressWarnings("unused")
+// @SuppressWarnings("unused")
 public class FilesParser {
 
     public static void main(String[] args) {
@@ -16,6 +16,13 @@ public class FilesParser {
         String path = "/Users/lilbig/Desktop/483_final_project";
 
         FilesParser fp = new FilesParser(path);
+        // try {
+        // File fileToWrite = new File("/Users/lilbig/Desktop/483_final_project/wikiTitles0005");
+        // FileWriter writerFile = new FileWriter(fileToWrite);
+        
+        //     generateArticleTitles("/Users/lilbig/Desktop/483_final_project/wiki-subset-20140602/enwiki-20140602-pages-articles.xml-0005.txt", writerFile);
+        // } catch (IOException e) {
+        // }
     }
 
     public FilesParser(String path) {
@@ -32,7 +39,12 @@ public class FilesParser {
 
         // Loop over all wiki files in the directory (there should be 80 of them)
         int i = 0;
+
+        
         File longWikiDir = new File(path + "/wiki-subset-20140602");
+        // File longWikiDir = new File(path + "/test");    // testing purposes, don't use
+
+
         String[] longWikiDirContents = longWikiDir.list();
         for (String longWikiFileName : longWikiDirContents) {
             // Skip over any non .txt files (e.g. the Mac hidden file .DS_Store)
@@ -41,7 +53,12 @@ public class FilesParser {
             }
 
             // Create new directory for the shortened files to go
+
+
             String shortDirPath = path + "/wiki-subset-20140602-shortened";
+            // String shortDirPath = path + "/test-shortened";    // testing purposes, don't use
+
+
             new File(shortDirPath).mkdirs(); // does not overwrite dir if it already exists
 
             // Get the longWikiFilePath and shortWikiFilePath
@@ -54,6 +71,7 @@ public class FilesParser {
             // Shorten the files, sending the shortened version to the newDir just created
             // System.out.println("From: " + longWikiFilePath + "\nTo: " + shortWikiFilePath
             // + "\n");
+
             createShortenedFile(longWikiFilePath, shortWikiFilePath);
             i++;
         }
@@ -95,13 +113,19 @@ public class FilesParser {
             String line = "";
             boolean isBreak = false;
             while ((line = input.readLine()) != null) {
-                if ((line.startsWith("[[") && line.endsWith("]]")) || isBreak) {
+                if ((line.startsWith("[[") && line.endsWith("]]") && 
+                        !line.startsWith("[[File:") && !line.startsWith("[[Image:")) || isBreak) {
                     boolean firstLine = true;
                     isBreak = false;
                     while (!line.startsWith("==") && !line.endsWith("==")) {
                         if (line.startsWith("[[") && line.endsWith("]]") && !firstLine) {
-                            isBreak = true;
-                            break;
+                            if (line.startsWith("[[File:") || line.startsWith("[[Image:")) {
+                                line = input.readLine();
+                            	continue;
+                            } else {
+                                isBreak = true;
+                                break;
+                            }
                         }
                         firstLine = false;
                         writerFile.write(line + "\n");
@@ -118,7 +142,7 @@ public class FilesParser {
         writerFile.close();
     }
 
-    public void generateArticleTitles(String inputFileName, FileWriter writerFile) throws IOException {
+    public static void generateArticleTitles(String inputFileName, FileWriter writerFile) throws IOException {
         try (BufferedReader input = new BufferedReader(new FileReader(inputFileName))) {
             String line = "";
             while ((line = input.readLine()) != null) {
