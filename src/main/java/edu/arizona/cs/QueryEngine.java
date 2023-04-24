@@ -53,9 +53,9 @@ public class QueryEngine {
 
             File fileToWrite = new File("output.txt");
             file = new FileWriter(fileToWrite);
-            // objQueryEngine.runAllJQuestions(100);    // Give it how many results you want to see
+            objQueryEngine.runAllJQuestions(100);    // Give it how many results you want to see
 
-            objQueryEngine.runQs();         // Use this if you want to manually type in queries
+            // objQueryEngine.runQs();         // Use this if you want to manually type in queries
 
             // objQueryEngine.checkExistence();     // Checks to see if the answer wikipedia
                                                     // documents even exist in our collection
@@ -86,6 +86,7 @@ public class QueryEngine {
         String[] dirContentTemp = dir.list();
         List<String> dirContent = Arrays.asList(dirContentTemp);
 
+        int totalDocs = 0;
         try {
             Path path = Paths.get("src/main/java/edu/arizona/cs/");
 
@@ -126,6 +127,7 @@ public class QueryEngine {
                         w.addDocument(doc);
                     }
                     System.out.println("Created " + numDocs + " documents in the index.\n");
+                    totalDocs += numDocs;
                     inputScanner.close();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -134,8 +136,17 @@ public class QueryEngine {
             w.close();
         } catch (Exception e) {
         }
+        System.out.println("Total documents created: " + totalDocs);
     }
 
+    /**
+     * Method that allows the user to manually type in queries one after another.
+     * Not used very often but useful for various purposes to be able to test any
+     * query you want.
+     * 
+     * @throws java.io.FileNotFoundException
+     * @throws java.io.IOException
+     */
     public void runQs() throws java.io.FileNotFoundException, java.io.IOException {
         System.out.println("\n\n ----- RUNNING Q -----");
 
@@ -166,8 +177,7 @@ public class QueryEngine {
 
     /**
      * Performs the functionality of giving a query to the index, obtaining the
-     * results,
-     * and printing out and returning some of them.
+     * results, and printing out and returning some of those results.
      * 
      * @param fullQuery - The exact query to be passed to the index
      * @return a list of ResultClass objects of each document matching the fullQuery
@@ -261,6 +271,19 @@ public class QueryEngine {
         // Loop over all jeopardy questions
         for (String[] jQ : jQuestions) {
             String tempQ = jQ[Q_INDEX];
+
+            String category = jQ[CAT_INDEX];
+            category = category.replace("(", "");
+            category = category.replace(")", "");
+            int loc = category.indexOf("You");  // index of "You" if it exists
+            if (loc != -1) {
+                int str1Loc = category.indexOf("Alex:");
+                String str1 = category.substring(0, str1Loc - 1); // we want everything before "(Alex:"
+                String str2 = category.substring(loc + 9);   // we want everything after "You give"
+                category = str1 + " " + str2;
+            }
+            tempQ += " " + category;   // OPTIONAL: also uses the category
+
             tempQ = tempQ.replace(":", "");
             tempQ = tempQ.replace("\"", "");
             
@@ -278,7 +301,7 @@ public class QueryEngine {
             System.out.println("Printing the answers to query " + jQ[Q_INDEX]);
             runQueries(fullQuery, numHits, jQ[ANS_INDEX]);
             file.append("\n\n");
-            System.out.println("\n\n");
+            System.out.println("\n");
         }
         file.append("Mean Reciprical Rank: " + String.valueOf(reciprocalRankSum / jQuestions.size()) + "\n");
         file.append(String.valueOf(numCorrect) + " out of " + String.valueOf(jQuestions.size())
@@ -287,6 +310,11 @@ public class QueryEngine {
         System.out.println(String.valueOf(numCorrect) + " out of " + String.valueOf(jQuestions.size())
                 + " questions were answered correctly");
     }
+    /**
+     * See runAllJQuestions(int numHits)
+     * Default's numHits to 10.
+     * @throws IOException
+     */
     public void runAllJQuestions() throws IOException { runAllJQuestions(10); }
 
     /**
