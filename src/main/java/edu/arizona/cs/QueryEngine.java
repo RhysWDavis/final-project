@@ -275,14 +275,12 @@ public class QueryEngine {
             String category = jQ[CAT_INDEX];
             category = category.replace("(", "");
             category = category.replace(")", "");
-            int loc = category.indexOf("You");  // index of "You" if it exists
+
+            int loc = category.indexOf("Alex:");    // remove any "Alex: we'll give you..." text
             if (loc != -1) {
-                int str1Loc = category.indexOf("Alex:");
-                String str1 = category.substring(0, str1Loc - 1); // we want everything before "(Alex:"
-                String str2 = category.substring(loc + 9);   // we want everything after "You give"
-                category = str1 + " " + str2;
+                category = category.substring(0, loc);
             }
-            tempQ += " " + category;   // OPTIONAL: also uses the category
+            tempQ += " " + category;
 
             tempQ = tempQ.replace(":", "");
             tempQ = tempQ.replace("\"", "");
