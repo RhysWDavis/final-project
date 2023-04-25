@@ -1,13 +1,13 @@
 package edu.arizona.cs;
+
 import org.apache.lucene.document.Document;
 
-public class ResultClass implements Comparable<ResultClass> {
+public class ResultClass {
     Document DocName;
     double docScore = 0;
 
-
-    @Override
-    public int compareTo(ResultClass o) {
-        return Double.compare(this.docScore, o.docScore);
-    }
+    // @Override
+    // public int compareTo(ResultClass o) {
+    // return Double.compare(this.docScore, o.docScore);
+    // }
 }

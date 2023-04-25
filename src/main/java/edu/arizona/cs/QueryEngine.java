@@ -1,6 +1,12 @@
 package edu.arizona.cs;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
+import org.apache.lucene.analysis.core.SimpleAnalyzer;
+import org.apache.lucene.analysis.core.StopAnalyzer;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.custom.CustomAnalyzer;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -18,7 +24,6 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.similarities.LMDirichletSimilarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,12 +34,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
-@SuppressWarnings("unused")
+//@SuppressWarnings("unused")
+
 public class QueryEngine {
     private boolean indexExists = false;
     private String inputDirPath = "";
     private Directory index;
-    private Analyzer analyzer = new StandardAnalyzer();
+    private Analyzer analyzer = new EnglishAnalyzer();
     private ArrayList<String[]> jQuestions;
     private float reciprocalRankSum = 0;
     private int numCorrect = 0;
@@ -44,20 +50,18 @@ public class QueryEngine {
 
     public static void main(String[] args) {
         try {
-            // String path = "/Users/sgrim/Desktop/483_final_project";
-            String path = "/Users/lilbig/Desktop/483_final_project";
+            String path = "/Users/sgrim/Desktop/483_final_project";
+            // String path = "/Users/lilbig/Desktop/483_final_project";
             QueryEngine objQueryEngine = new QueryEngine(path);
             objQueryEngine.getJQuestions(path);
 
-            
-            objQueryEngine.runAllJQuestions(10);    // Give it how many results you want to see
+            objQueryEngine.runAllJQuestions(10); // Give it how many results you want to see
 
-            // objQueryEngine.runQs();         // Use this if you want to manually type in queries
+            // objQueryEngine.runQs(); // Use this if you want to manually type in queries
 
-            // objQueryEngine.checkExistence();     // Checks to see if the answer wikipedia
-                                                    // documents even exist in our collection
-        }
-        catch (Exception ex) {
+            // objQueryEngine.checkExistence(); // Checks to see if the answer wikipedia
+            // documents even exist in our collection
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -251,14 +255,14 @@ public class QueryEngine {
             String tempQ = jQ[Q_INDEX];
             tempQ = tempQ.replace(":", "");
             tempQ = tempQ.replace("\"", "");
-            
+
             String[] query = tempQ.split(" ");
 
             String fullQuery = "";
             for (String s : query) {
                 fullQuery += s + " OR ";
             }
-            fullQuery = fullQuery.substring(0, fullQuery.length()-3);
+            fullQuery = fullQuery.substring(0, fullQuery.length() - 3);
 
             // System.out.println("You entered the query: " + fullQuery);
 
@@ -270,7 +274,10 @@ public class QueryEngine {
         System.out.println(String.valueOf(numCorrect) + " out of " + String.valueOf(jQuestions.size())
                 + " questions were answered correctly");
     }
-    public void runAllJQuestions() { runAllJQuestions(10); }
+
+    public void runAllJQuestions() {
+        runAllJQuestions(10);
+    }
 
     /**
      * Checks to see if there is a wikipedia article with the same title
@@ -285,7 +292,7 @@ public class QueryEngine {
             String tempQ = jQ[ANS_INDEX];
             tempQ = tempQ.replace(":", "");
             tempQ = tempQ.replace("\"", "");
-            
+
             String[] query = tempQ.split(" ");
 
             String fullQuery = "";
@@ -304,8 +311,6 @@ public class QueryEngine {
         System.out.println(String.valueOf(numCorrect) + " out of " + String.valueOf(jQuestions.size())
                 + " questions were answered correctly");
     }
-
-  
 
     /**
      * Reads the questions.txt file from the directory and creates an ArrayList of

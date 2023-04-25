@@ -13,7 +13,7 @@ public class FilesParser {
 
     public static void main(String[] args) {
         // String path = args[0];
-        String path = "/Users/lilbig/Desktop/483_final_project";
+        String path = "/Users/sgrim/Desktop/483_final_project";
 
         FilesParser fp = new FilesParser(path);
     }
