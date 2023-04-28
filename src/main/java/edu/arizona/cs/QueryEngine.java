@@ -1,16 +1,19 @@
 package edu.arizona.cs;
 
 import org.apache.lucene.analysis.Analyzer;
-<<<<<<< HEAD
-import org.apache.lucene.analysis.core.KeywordAnalyzer;
-import org.apache.lucene.analysis.core.SimpleAnalyzer;
-import org.apache.lucene.analysis.core.StopAnalyzer;
-import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.custom.CustomAnalyzer;
-=======
->>>>>>> davis_rhys_dev
+import org.apache.lucene.analysis.CharArraySet;
+import org.apache.lucene.analysis.LowerCaseFilter;
+import org.apache.lucene.analysis.StopFilter;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.core.LetterTokenizer;
+import org.apache.lucene.analysis.core.WhitespaceTokenizer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.en.PorterStemFilter;
+import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
+import org.apache.lucene.analysis.miscellaneous.CapitalizationFilter;
+import org.apache.lucene.analysis.miscellaneous.LengthFilter;
+import org.apache.lucene.analysis.standard.StandardFilter;
+import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -24,6 +27,8 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.apache.lucene.search.similarities.LMDirichletSimilarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -52,6 +57,23 @@ public class QueryEngine {
     private static final int ANS_INDEX = 2;
     private static FileWriter file;
 
+    public class MyCustomAnalyzer extends Analyzer {
+
+        @Override
+        protected TokenStreamComponents createComponents(String fieldName) {
+            CharArraySet stopWords = EnglishAnalyzer.getDefaultStopSet();
+            StandardTokenizer src = new StandardTokenizer();
+            TokenStream result = new StandardFilter(src);
+            result = new LowerCaseFilter(result);
+            result = new StopFilter(result, stopWords);
+            result = new PorterStemFilter(result);
+            result = new CapitalizationFilter(result);
+            result = new ASCIIFoldingFilter(result);
+            result = new LengthFilter(result, 1, 11);
+            return new TokenStreamComponents(src, result);
+        }
+    }
+
     public static void main(String[] args) {
         try {
             String path = "/Users/sgrim/Desktop/483_final_project";
@@ -59,27 +81,16 @@ public class QueryEngine {
             QueryEngine objQueryEngine = new QueryEngine(path);
             objQueryEngine.getJQuestions(path);
 
-<<<<<<< HEAD
-            objQueryEngine.runAllJQuestions(10); // Give it how many results you want to see
-=======
             File fileToWrite = new File("output.txt");
             file = new FileWriter(fileToWrite);
-            objQueryEngine.runAllJQuestions(100);    // Give it how many results you want to see
->>>>>>> davis_rhys_dev
+            objQueryEngine.runAllJQuestions(100); // Give it how many results you want to see
 
             // objQueryEngine.runQs(); // Use this if you want to manually type in queries
 
-<<<<<<< HEAD
             // objQueryEngine.checkExistence(); // Checks to see if the answer wikipedia
             // documents even exist in our collection
-        } catch (Exception ex) {
-=======
-            // objQueryEngine.checkExistence();     // Checks to see if the answer wikipedia
-                                                    // documents even exist in our collection
             file.close();
-        }
-        catch (Exception ex) {
->>>>>>> davis_rhys_dev
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -111,7 +122,7 @@ public class QueryEngine {
             // analyzer = new StandardAnalyzer();
             index = FSDirectory.open(path);
             IndexWriterConfig config = new IndexWriterConfig(analyzer);
-            LMDirichletSimilarity similar = new LMDirichletSimilarity();
+            BM25Similarity similar = new BM25Similarity();
             config.setSimilarity(similar);
             config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
             IndexWriter w = new IndexWriter(index, config);
@@ -207,7 +218,7 @@ public class QueryEngine {
             Query q = new QueryParser("text", analyzer).parse(fullQuery);
             IndexReader reader = DirectoryReader.open(index);
             IndexSearcher searcher = new IndexSearcher(reader);
-            LMDirichletSimilarity similar = new LMDirichletSimilarity();
+            BM25Similarity similar = new BM25Similarity();
             searcher.setSimilarity(similar);
             if (numHits == 0) {
                 return null;
@@ -233,7 +244,7 @@ public class QueryEngine {
                     }
                     this.reciprocalRankSum += rank;
                     file.append("The document: " + result.DocName.get("docName") + " had a score of: " + score
-                    + " the reciprocal rank is " + String.valueOf(rank) + "\n");
+                            + " the reciprocal rank is " + String.valueOf(rank) + "\n");
                     System.out.println("The document: " + result.DocName.get("docName") + " had a score of: " + score
                             + " the reciprocal rank is " + String.valueOf(rank));
                 } else if (answer.contains("|")) {
@@ -241,7 +252,7 @@ public class QueryEngine {
                     if (result.DocName.get("docName").equals(answers[0].trim())
                             || result.DocName.get("docName").equals(answers[1].trim())) {
                         file.append("The document: " + result.DocName.get("docName") + " had a score of: " + score
-                        + " the reciprocal rank is " + String.valueOf(rank) + "\n");
+                                + " the reciprocal rank is " + String.valueOf(rank) + "\n");
                         System.out
                                 .println("The document: " + result.DocName.get("docName") + " had a score of: " + score
                                         + " the reciprocal rank is " + String.valueOf(rank));
@@ -250,7 +261,8 @@ public class QueryEngine {
                             numCorrect++;
                         }
                     } else {
-                        file.append("The document: " + result.DocName.get("docName") + " had a score of: " + score + "\n");
+                        file.append(
+                                "The document: " + result.DocName.get("docName") + " had a score of: " + score + "\n");
                         System.out.println(
                                 "The document: " + result.DocName.get("docName") + " had a score of: " + score);
                     }
@@ -282,6 +294,7 @@ public class QueryEngine {
      * Runs the index on all 100 jeopardy questions.
      * 
      * Must call getJQuestions(String path) before this method.
+     * 
      * @throws IOException
      */
     public void runAllJQuestions(int numHits) throws IOException {
@@ -294,7 +307,7 @@ public class QueryEngine {
             category = category.replace("(", "");
             category = category.replace(")", "");
 
-            int loc = category.indexOf("Alex:");    // remove any "Alex: we'll give you..." text
+            int loc = category.indexOf("Alex:"); // remove any "Alex: we'll give you..." text
             if (loc != -1) {
                 category = category.substring(0, loc);
             }
@@ -321,24 +334,21 @@ public class QueryEngine {
         }
         file.append("Mean Reciprical Rank: " + String.valueOf(reciprocalRankSum / jQuestions.size()) + "\n");
         file.append(String.valueOf(numCorrect) + " out of " + String.valueOf(jQuestions.size())
-        + " questions were answered correctly\n");
+                + " questions were answered correctly\n");
         System.out.println("Mean Reciprical Rank: " + String.valueOf(reciprocalRankSum / jQuestions.size()));
         System.out.println(String.valueOf(numCorrect) + " out of " + String.valueOf(jQuestions.size())
                 + " questions were answered correctly");
     }
-<<<<<<< HEAD
 
-    public void runAllJQuestions() {
-        runAllJQuestions(10);
-    }
-=======
     /**
      * See runAllJQuestions(int numHits)
      * Default's numHits to 10.
+     * 
      * @throws IOException
      */
-    public void runAllJQuestions() throws IOException { runAllJQuestions(10); }
->>>>>>> davis_rhys_dev
+    public void runAllJQuestions() throws IOException {
+        runAllJQuestions(10);
+    }
 
     /**
      * Checks to see if there is a wikipedia article with the same title
