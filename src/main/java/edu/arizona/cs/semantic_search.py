@@ -9,7 +9,7 @@ import pandas as pd
 import nltk
 import warnings
 import glob
-
+import sys
 
 nltk.download('punkt')
 
@@ -23,12 +23,16 @@ bi_encoder_type = "multi-qa-mpnet-base-dot-v1"
 
 top_k = 5
 top_k*=2
-
+	# Path for shortened Wikipedia documents
 path="/Users/karan/OneDrive/Desktop/college/483_final/wiki-subset-20140602-shortened"
-
-path2="/Users/karan/OneDrive/Desktop/outputsamp.txt"
-
+# Path for wikipedia documents to be used
+path2="/Users/karan/OneDrive/Desktop/college/483_final/final-project/output.txt"
+# Path for 100 input questions
 path3="/Users/karan/OneDrive/Desktop/inputsamp.txt"
+# Use 100 input questions as input for transformer
+use_input=False
+# Require the Java file to call the transformer with query as arg
+re_rank=True
 
 necessary=[]
 titles={}
@@ -201,7 +205,7 @@ def search_func(query, bi_encoder_type, top_k=top_k):
 import time
 
 def main():
-    global bm25
+    global bm25, use_input, re_rank
     global docs, bi_encoder, corpus_embeddings, cross_encoder
     t=time.localtime()
     current_time=time.strftime("%H:%M:%S",t)
@@ -221,18 +225,22 @@ def main():
     t=time.localtime()
     current_time=time.strftime("%H:%M:%S",t)
     print(current_time)
-    flag=False
 
-    if(flag):
+    if(use_input):
         f3=open(path3,'r',encoding='utf-8')
         ff=f3.readlines()
         for ln in ff:
             print(ln)
             search_func(ln,bi_encoder_type,top_k)
+    elif(re_rank):
+        finalized = sys.argv[1].replace("OR ","")
+        print(finalized)
+        search_func(finalized,bi_encoder_type,top_k)
     else:
         while(True):
             search_query=input("Enter a Jeopardy question\n")
             search_func(search_query,bi_encoder_type,top_k)
 
-if __name__=="__main__":
-    main()
+#if __name__=="__main__":
+#    main()
+main()

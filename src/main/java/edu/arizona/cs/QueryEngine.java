@@ -23,10 +23,12 @@ import org.apache.lucene.store.FSDirectory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
@@ -39,6 +41,8 @@ public class QueryEngine {
     private ArrayList<String[]> jQuestions;
     private float reciprocalRankSum = 0;
     private int numCorrect = 0;
+    private boolean useTransformer = true;
+    private String pythonDirectory = "src/main/java/edu/arizona/cs/semantic_search.py ";
     private static final int CAT_INDEX = 0;
     private static final int Q_INDEX = 1;
     private static final int ANS_INDEX = 2;
@@ -47,21 +51,19 @@ public class QueryEngine {
     public static void main(String[] args) {
         try {
             // String path = "/Users/sgrim/Desktop/483_final_project";
-            String path = "/Users/lilbig/Desktop/483_final_project";
+            // String path = "/Users/lilbig/Desktop/483_final_project";
+            String path = "/Users/karan/OneDrive/Desktop/college/483_final";
             QueryEngine objQueryEngine = new QueryEngine(path);
             objQueryEngine.getJQuestions(path);
 
-            File fileToWrite = new File("output.txt");
-            file = new FileWriter(fileToWrite);
-            objQueryEngine.runAllJQuestions(100);    // Give it how many results you want to see
+            objQueryEngine.runAllJQuestions(100); // Give it how many results you want to see
 
-            // objQueryEngine.runQs();         // Use this if you want to manually type in queries
+            // objQueryEngine.runQs(); // Use this if you want to manually type in queries
 
-            // objQueryEngine.checkExistence();     // Checks to see if the answer wikipedia
-                                                    // documents even exist in our collection
+            // objQueryEngine.checkExistence(); // Checks to see if the answer wikipedia
+            // documents even exist in our collection
             file.close();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -196,6 +198,10 @@ public class QueryEngine {
             }
             TopDocs docs = searcher.search(q, numHits);
             ScoreDoc[] hits = docs.scoreDocs;
+            File fileToWrite = new File("output.txt");
+            fileToWrite.delete();
+            fileToWrite = new File("output.txt");
+            file = new FileWriter(fileToWrite);
 
             // For each document matching the query, add it to the list and print out some
             // info
@@ -215,7 +221,7 @@ public class QueryEngine {
                     }
                     this.reciprocalRankSum += rank;
                     file.append("The document: " + result.DocName.get("docName") + " had a score of: " + score
-                    + " the reciprocal rank is " + String.valueOf(rank) + "\n");
+                            + " the reciprocal rank is " + String.valueOf(rank) + "\n");
                     System.out.println("The document: " + result.DocName.get("docName") + " had a score of: " + score
                             + " the reciprocal rank is " + String.valueOf(rank));
                 } else if (answer.contains("|")) {
@@ -223,7 +229,7 @@ public class QueryEngine {
                     if (result.DocName.get("docName").equals(answers[0].trim())
                             || result.DocName.get("docName").equals(answers[1].trim())) {
                         file.append("The document: " + result.DocName.get("docName") + " had a score of: " + score
-                        + " the reciprocal rank is " + String.valueOf(rank) + "\n");
+                                + " the reciprocal rank is " + String.valueOf(rank) + "\n");
                         System.out
                                 .println("The document: " + result.DocName.get("docName") + " had a score of: " + score
                                         + " the reciprocal rank is " + String.valueOf(rank));
@@ -232,7 +238,8 @@ public class QueryEngine {
                             numCorrect++;
                         }
                     } else {
-                        file.append("The document: " + result.DocName.get("docName") + " had a score of: " + score + "\n");
+                        file.append(
+                                "The document: " + result.DocName.get("docName") + " had a score of: " + score + "\n");
                         System.out.println(
                                 "The document: " + result.DocName.get("docName") + " had a score of: " + score);
                     }
@@ -240,6 +247,22 @@ public class QueryEngine {
                 } else {
                     file.append("The document: " + result.DocName.get("docName") + " had a score of: " + score + "\n");
                     System.out.println("The document: " + result.DocName.get("docName") + " had a score of: " + score);
+                }
+            }
+            file.close();
+            if (useTransformer) {
+                String command = "python /c start python ./semantic_search.py\"" + fullQuery + "\"";
+                ProcessBuilder p = new ProcessBuilder("python",
+                        pythonDirectory, fullQuery);
+                Process pr = p.start();
+                BufferedReader rdr = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+                BufferedReader er_rdr = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
+                String lns = null;
+                while ((lns = rdr.readLine()) != null) {
+                    System.out.println(lns);
+                }
+                while ((lns = er_rdr.readLine()) != null) {
+                    System.out.println(lns);
                 }
             }
 
@@ -264,6 +287,7 @@ public class QueryEngine {
      * Runs the index on all 100 jeopardy questions.
      * 
      * Must call getJQuestions(String path) before this method.
+     * 
      * @throws IOException
      */
     public void runAllJQuestions(int numHits) throws IOException {
@@ -276,7 +300,7 @@ public class QueryEngine {
             category = category.replace("(", "");
             category = category.replace(")", "");
 
-            int loc = category.indexOf("Alex:");    // remove any "Alex: we'll give you..." text
+            int loc = category.indexOf("Alex:"); // remove any "Alex: we'll give you..." text
             if (loc != -1) {
                 category = category.substring(0, loc);
             }
@@ -284,36 +308,42 @@ public class QueryEngine {
 
             tempQ = tempQ.replace(":", "");
             tempQ = tempQ.replace("\"", "");
-            
+
             String[] query = tempQ.split(" ");
 
             String fullQuery = "";
             for (String s : query) {
                 fullQuery += s + " OR ";
             }
-            fullQuery = fullQuery.substring(0, fullQuery.length()-3);
+            fullQuery = fullQuery.substring(0, fullQuery.length() - 3);
 
             // System.out.println("You entered the query: " + fullQuery);
 
-            file.append("Printing the answers to query " + jQ[Q_INDEX] + "\n");
+            // file.append("Printing the answers to query " + jQ[Q_INDEX] + "\n");
             System.out.println("Printing the answers to query " + jQ[Q_INDEX]);
             runQueries(fullQuery, numHits, jQ[ANS_INDEX]);
-            file.append("\n\n");
+            // file.append("\n\n");
             System.out.println("\n");
         }
-        file.append("Mean Reciprical Rank: " + String.valueOf(reciprocalRankSum / jQuestions.size()) + "\n");
-        file.append(String.valueOf(numCorrect) + " out of " + String.valueOf(jQuestions.size())
-        + " questions were answered correctly\n");
+        // file.append("Mean Reciprical Rank: " + String.valueOf(reciprocalRankSum /
+        // jQuestions.size()) + "\n");
+        // file.append(String.valueOf(numCorrect) + " out of " +
+        // String.valueOf(jQuestions.size())
+        // + " questions were answered correctly\n");
         System.out.println("Mean Reciprical Rank: " + String.valueOf(reciprocalRankSum / jQuestions.size()));
         System.out.println(String.valueOf(numCorrect) + " out of " + String.valueOf(jQuestions.size())
                 + " questions were answered correctly");
     }
+
     /**
      * See runAllJQuestions(int numHits)
      * Default's numHits to 10.
+     * 
      * @throws IOException
      */
-    public void runAllJQuestions() throws IOException { runAllJQuestions(10); }
+    public void runAllJQuestions() throws IOException {
+        runAllJQuestions(10);
+    }
 
     /**
      * Checks to see if there is a wikipedia article with the same title
@@ -328,7 +358,7 @@ public class QueryEngine {
             String tempQ = jQ[ANS_INDEX];
             tempQ = tempQ.replace(":", "");
             tempQ = tempQ.replace("\"", "");
-            
+
             String[] query = tempQ.split(" ");
 
             String fullQuery = "";
@@ -347,8 +377,6 @@ public class QueryEngine {
         System.out.println(String.valueOf(numCorrect) + " out of " + String.valueOf(jQuestions.size())
                 + " questions were answered correctly");
     }
-
-  
 
     /**
      * Reads the questions.txt file from the directory and creates an ArrayList of
