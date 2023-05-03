@@ -57,23 +57,6 @@ public class QueryEngine {
     private static final int ANS_INDEX = 2;
     private static FileWriter file;
 
-    public class MyCustomAnalyzer extends Analyzer {
-
-        @Override
-        protected TokenStreamComponents createComponents(String fieldName) {
-            CharArraySet stopWords = EnglishAnalyzer.getDefaultStopSet();
-            StandardTokenizer src = new StandardTokenizer();
-            TokenStream result = new StandardFilter(src);
-            result = new LowerCaseFilter(result);
-            result = new StopFilter(result, stopWords);
-            result = new PorterStemFilter(result);
-            result = new CapitalizationFilter(result);
-            result = new ASCIIFoldingFilter(result);
-            result = new LengthFilter(result, 1, 11);
-            return new TokenStreamComponents(src, result);
-        }
-    }
-
     public static void main(String[] args) {
         try {
             String path = "/Users/sgrim/Desktop/483_final_project";
@@ -97,7 +80,12 @@ public class QueryEngine {
 
     public QueryEngine(String filesDir) {
         inputDirPath = filesDir;
-        buildIndex();
+        try {
+            index = FSDirectory.open(Paths.get("src/main/java/edu/arizona/cs/"));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -122,7 +110,7 @@ public class QueryEngine {
             // analyzer = new StandardAnalyzer();
             index = FSDirectory.open(path);
             IndexWriterConfig config = new IndexWriterConfig(analyzer);
-            BM25Similarity similar = new BM25Similarity();
+            LMDirichletSimilarity similar = new LMDirichletSimilarity();
             config.setSimilarity(similar);
             config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
             IndexWriter w = new IndexWriter(index, config);
