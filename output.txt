@@ -1,100 +1,100 @@
-The document: African Union – United Nations Hybrid Operation in Darfur had a score of: 11.654
-The document: United Nations Partition Plan for Palestine had a score of: 10.792
-The document: United Nations Security Council Resolution 1441 had a score of: 10.631
-The document: United Nations Security Council Resolution 794 had a score of: 10.51
-The document: Presidency of George W. Bush had a score of: 10.502
-The document: Golan Heights had a score of: 10.474
-The document: Joe Biden had a score of: 10.33
-The document: Kentucky and Virginia Resolutions had a score of: 10.104
-The document: United Nations Security Council Resolution 348 had a score of: 10.079
-The document: United Nations Security Council Resolution 1962 had a score of: 10.072
-The document: International Criminal Court had a score of: 10.057
-The document: Convention on the Rights of the Child had a score of: 9.959
-The document: Palestinian refugee had a score of: 9.84
-The document: Griffith Island (Nunavut) had a score of: 9.79
-The document: United Nations Security Council Resolution 315 had a score of: 9.696
-The document: United Nations Security Council Resolution 349 had a score of: 9.696
-The document: Color television had a score of: 9.679
-The document: Religion in China had a score of: 9.575
-The document: Northern Cyprus had a score of: 9.513
-The document: Taiwan had a score of: 9.326 the reciprocal rank is 0.05
-The document: Capital punishment had a score of: 9.309
-The document: United Nations Security Council Resolution 1769 had a score of: 9.29
-The document: William Henry Harrison had a score of: 9.286
-The document: Palestinian people had a score of: 9.279
-The document: United Nations Security Council and the Iraq War had a score of: 9.025
-The document: 2008 Argentine government conflict with the agricultural sector had a score of: 8.975
-The document: Best alternative to a negotiated agreement had a score of: 8.961
-The document: Council of Europe Parliamentary Assembly Resolution 1416 (2005) had a score of: 8.812
-The document: United Nations Security Council Resolution 940 had a score of: 8.787
-The document: Sri Lanka had a score of: 8.757
-The document: Astronomical seeing had a score of: 8.751
-The document: United Nations General Assembly Resolution 505 had a score of: 8.743
-The document: United Nations Interim Administration Mission in Kosovo had a score of: 8.731
-The document: United Nations Security Council Resolution 314 had a score of: 8.715
-The document: Western Sahara had a score of: 8.679
-The document: One-China policy had a score of: 8.613
-The document: Cultural Revolution had a score of: 8.597
-The document: Korean War had a score of: 8.588
-The document: United Nations Security Council Resolution 354 had a score of: 8.53
-The document: Osteopathy had a score of: 8.5
-The document: Harmony with nature had a score of: 8.374
-The document: United Nations Security Council Resolution 353 had a score of: 8.343
-The document: Kosovo Liberation Army had a score of: 8.341
-The document: Partial agreement had a score of: 8.332
-The document: Comprehensive Nuclear-Test-Ban Treaty had a score of: 8.293
-The document: Afro-Descendant had a score of: 8.251
-The document: United Nations Security Council Resolution 1963 had a score of: 8.204
-The document: Roanoke Island had a score of: 8.175
-The document: Veto had a score of: 8.17
-The document: Sex reassignment therapy had a score of: 8.149
-The document: Invasion of Grenada had a score of: 8.109
-The document: Hamas had a score of: 8.063
-The document: Metric prefix had a score of: 8.056
-The document: Travers Island, New York had a score of: 8.046
-The document: Hong Kong had a score of: 8.018
-The document: United Nations Security Council Resolution 1961 had a score of: 8.002
-The document: Scope (computer science) had a score of: 7.991
-The document: 7 Medical Battalion Group had a score of: 7.971
-The document: Iran–Iraq War had a score of: 7.901
-The document: Political status of Taiwan had a score of: 7.784
-The document: Ghulam Hussain Hidayatullah had a score of: 7.782
-The document: CompactFlash had a score of: 7.776
-The document: Gulf War had a score of: 7.775
-The document: Electron microscope had a score of: 7.768
-The document: Debate had a score of: 7.724
-The document: Rising Sun Flag had a score of: 7.707
-The document: Black hole complementarity had a score of: 7.702
-The document: Budget crisis had a score of: 7.654
-The document: Special Committee to Investigate Israeli Practices Affecting the Human Rights of the Palestinian People had a score of: 7.614
-The document: Reverse Address Resolution Protocol had a score of: 7.59
-The document: Vietnam War had a score of: 7.553
-The document: President's commission on aviation security and terrorism had a score of: 7.525
-The document: Alternative dispute resolution had a score of: 7.496
-The document: Cyprus dispute had a score of: 7.485
-The document: Amiga Advanced Graphics Architecture had a score of: 7.465
-The document: North Korea had a score of: 7.45
-The document: Dáil Constitution had a score of: 7.448
-The document: United Nations Security Council Resolution 351 had a score of: 7.442
-The document: Convention for the Suppression of the Traffic in Persons and of the Exploitation of the Prostitution of Others had a score of: 7.436
-The document: HMS Resolution had a score of: 7.435
-The document: Kuomintang had a score of: 7.431
-The document: Flag of Vietnam had a score of: 7.412
-The document: Resolution-class submarine had a score of: 7.408
-The document: Taiwan Province had a score of: 7.35
-The document: NTSC had a score of: 7.292
-The document: Muslim Brotherhood had a score of: 7.289
-The document: Takbir had a score of: 7.282
-The document: Universal jurisdiction had a score of: 7.281
-The document: AC'97 had a score of: 7.28
-The document: Theodore Davis (Canadian politician) had a score of: 7.261
-The document: Chinese name had a score of: 7.247
-The document: Elvis Presley had a score of: 7.246
-The document: Lowther Island had a score of: 7.233
-The document: Sharpless epoxidation had a score of: 7.231
-The document: Frank K. Mott had a score of: 7.208
-The document: Nucleosome had a score of: 7.154
-The document: Charles W. King had a score of: 7.152
-The document: CITES had a score of: 7.141
-The document: Oxidoreductase FAD-binding domain had a score of: 7.117
-The document: Corfu had a score of: 7.091
+The document: Robert Downey, Jr. had a score of: 16.466 the reciprocal rank is 1.0
+The document: The Five Orange Pips had a score of: 11.3
+The document: The Adventure of the Musgrave Ritual had a score of: 11.018
+The document: Ben Affleck had a score of: 10.598
+The document: Sherlock Holmes had a score of: 10.489
+The document: Irene Adler had a score of: 10.439
+The document: Basil Rathbone had a score of: 10.313
+The document: The Aviator (2004 film) had a score of: 10.259
+The document: William S. Baring-Gould had a score of: 9.965
+The document: Laurie R. King had a score of: 9.719
+The document: List of authors of new Sherlock Holmes stories had a score of: 9.579
+The document: Meryl Streep had a score of: 9.555
+The document: Shirley MacLaine had a score of: 9.378
+The document: Harry Arthur Saintsbury had a score of: 9.355
+The document: List of actors who have played Sherlock Holmes had a score of: 9.344
+The document: Jack Nicholson had a score of: 9.339
+The document: Edward Hardwicke had a score of: 9.256
+The document: Warren Beatty had a score of: 9.255
+The document: Paul Newman had a score of: 9.195
+The document: Sherlock Holmes Was Wrong had a score of: 9.126
+The document: Adrian Conan Doyle had a score of: 9.066
+The document: James Boswell had a score of: 9.059
+The document: Jessica Lange had a score of: 9.044
+The document: Crouching Tiger, Hidden Dragon had a score of: 9.011
+The document: Julia Roberts had a score of: 8.969
+The document: Peter Cushing had a score of: 8.84
+The document: Chinatown (1974 film) had a score of: 8.839
+The document: Miranda Richardson had a score of: 8.737
+The document: Michael Douglas had a score of: 8.715
+The document: Vanessa Redgrave had a score of: 8.639
+The document: George Clooney had a score of: 8.619
+The document: Raymond Francis had a score of: 8.588
+The document: Jeremy Brett had a score of: 8.582
+The document: Glenn Close had a score of: 8.566
+The document: Denzel Washington had a score of: 8.558
+The document: Steven Spielberg had a score of: 8.523
+The document: Ricky Gervais had a score of: 8.513
+The document: Martin Scorsese had a score of: 8.503
+The document: Nicole Kidman had a score of: 8.499
+The document: The Deadly Bees had a score of: 8.454
+The document: Geoffrey Rush had a score of: 8.41
+The document: Tales of Fatima had a score of: 8.409
+The document: Peter O'Toole had a score of: 8.401
+The document: Schindler's List had a score of: 8.369
+The document: Larry Millett had a score of: 8.341
+The document: Fred Astaire had a score of: 8.306
+The document: Natalie Portman had a score of: 8.306
+The document: Helen Hunt had a score of: 8.248
+The document: Robert Redford had a score of: 8.219
+The document: Celeste Holm had a score of: 8.194
+The document: Affif Ben Badra had a score of: 8.194
+The document: Russell Crowe had a score of: 8.14
+The document: Julie Andrews had a score of: 8.113
+The document: Sigourney Weaver had a score of: 8.092
+The document: Charlize Theron had a score of: 8.073
+The document: Morgan Freeman had a score of: 8.066
+The document: Cecil B. DeMille had a score of: 8.013
+The document: List of accolades received by Avatar had a score of: 8.003
+The document: Jim Broadbent had a score of: 7.916
+The document: Olivia de Havilland had a score of: 7.906
+The document: Roman Polanski had a score of: 7.888
+The document: Sean Connery had a score of: 7.885
+The document: SherlockHolmes had a score of: 7.841
+The document: Sherlock Holmes in other media had a score of: 7.84
+The document: Sherlock holmes canon had a score of: 7.84
+The document: Sherlock Holmes' War of the Worlds had a score of: 7.839
+The document: List of Sherlock Holmes (2013 TV Series) episodes had a score of: 7.837
+The document: List of people who have played Sherlock Holmes had a score of: 7.836
+The document: Cyclopides had a score of: 7.823
+The document: Auto-Wheel had a score of: 7.806
+The document: Quinn Fawcett had a score of: 7.788
+The document: Heath Ledger had a score of: 7.784
+The document: Mollie Hardwick had a score of: 7.773
+The document: Wayne Worcester had a score of: 7.757
+The document: Donald Serrell Thomas had a score of: 7.75
+The document: Kathy Bates had a score of: 7.75
+The document: Javier Bardem had a score of: 7.743
+The document: Tom Wilkinson had a score of: 7.727
+The document: Benton Fraser had a score of: 7.72
+The document: The White Company had a score of: 7.712
+The document: Big Finish Productions had a score of: 7.705
+The document: Liza Minnelli had a score of: 7.694
+The document: The D Case had a score of: 7.682
+The document: Reichenbach Falls had a score of: 7.682
+The document: Michael J. Fox had a score of: 7.68
+The document: Jon Voight had a score of: 7.677
+The document: Sunset Boulevard (film) had a score of: 7.665
+The document: Jimmy Harry had a score of: 7.649
+The document: Joan Plowright had a score of: 7.648
+The document: Brad Pitt had a score of: 7.621
+The document: Jacqueline Bisset had a score of: 7.62
+The document: The Famous Adventures of Mr. Magoo had a score of: 7.619
+The document: High Noon had a score of: 7.595
+The document: Some Like It Hot had a score of: 7.589
+The document: Bernardo Bertolucci had a score of: 7.586
+The document: Raiden (Metal Gear) had a score of: 7.582
+The document: Robert E. Howard had a score of: 7.582
+The document: Ang Lee had a score of: 7.537
+The document: H. M. Brock had a score of: 7.526
+The document: Liv Ullmann had a score of: 7.503

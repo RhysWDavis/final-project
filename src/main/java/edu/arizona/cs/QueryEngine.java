@@ -2,7 +2,6 @@ package edu.arizona.cs;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -54,11 +53,15 @@ public class QueryEngine {
             // String path = "/Users/lilbig/Desktop/483_final_project";
             String path = "./";
             QueryEngine objQueryEngine = new QueryEngine(path);
-            objQueryEngine.getJQuestions(path);
 
+            // COMMENT OUT THESE 2 LINES IF YOU WANT TO MANUALLY ENTER A QUERY
+            objQueryEngine.getJQuestions(path);  
             objQueryEngine.runAllJQuestions(100); // Give it how many results you want to see
 
-            // objQueryEngine.runQs(); // Use this if you want to manually type in queries
+            // UNCOMMENT THIS LINE TO MANUALLY ENTER A QUERY
+            // objQueryEngine.runQs(25); // Give it how many results you want to see
+
+
 
             // objQueryEngine.checkExistence(); // Checks to see if the answer wikipedia
             // documents even exist in our collection
@@ -149,7 +152,7 @@ public class QueryEngine {
      * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
      */
-    public void runQs() throws java.io.FileNotFoundException, java.io.IOException {
+    public void runQs(int numHits) throws java.io.FileNotFoundException, java.io.IOException {
         System.out.println("\n\n ----- RUNNING Q -----");
 
         Scanner userInput = new Scanner(System.in);
@@ -169,7 +172,7 @@ public class QueryEngine {
             fullQuery = fullQuery.substring(0, fullQuery.length() - 3);
 
             // System.out.println("You entered the query: " + fullQuery);
-            runQueries(fullQuery, 1000, q);
+            runQueries(fullQuery, numHits, q);
 
             System.out.println("Please enter a query (or STOP)\n");
             q = userInput.nextLine();
