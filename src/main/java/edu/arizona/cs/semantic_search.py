@@ -21,9 +21,9 @@ bi_encoder_type = "multi-qa-mpnet-base-dot-v1"
 top_k = 5
 top_k*=2
 	# Path for shortened Wikipedia documents
-path="/Users/karan/OneDrive/Desktop/college/483_final/wiki-subset-20140602-shortened"
+path="./wiki-subset-20140602-shortened"
 # Path for wikipedia documents to be used
-path2="/Users/karan/OneDrive/Desktop/college/483_final/final-project/output.txt"
+path2="./output.txt"
 # Path for 100 input questions
 path3="/Users/karan/OneDrive/Desktop/inputsamp.txt"
 # Use 100 input questions as input for transformer

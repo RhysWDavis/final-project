@@ -52,7 +52,7 @@ public class QueryEngine {
         try {
             // String path = "/Users/sgrim/Desktop/483_final_project";
             // String path = "/Users/lilbig/Desktop/483_final_project";
-            String path = "/Users/karan/OneDrive/Desktop/college/483_final";
+            String path = "./";
             QueryEngine objQueryEngine = new QueryEngine(path);
             objQueryEngine.getJQuestions(path);
 
