@@ -41,7 +41,7 @@ public class QueryEngine {
     private ArrayList<String[]> jQuestions;
     private float reciprocalRankSum = 0;
     private int numCorrect = 0;
-    private boolean useTransformer = true;
+    private boolean useTransformer = false;
     private String pythonDirectory = "src/main/java/edu/arizona/cs/semantic_search.py ";
     private static final int CAT_INDEX = 0;
     private static final int Q_INDEX = 1;

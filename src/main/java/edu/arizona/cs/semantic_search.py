@@ -11,9 +11,6 @@ import warnings
 import glob
 import sys
 
-nltk.download('punkt')
-
-from nltk import sent_tokenize
 
 warnings.filterwarnings("ignore")
 
