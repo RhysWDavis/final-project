@@ -41,7 +41,7 @@ public class QueryEngine {
     private ArrayList<String[]> jQuestions;
     private float reciprocalRankSum = 0;
     private int numCorrect = 0;
-    private boolean useTransformer = false;
+    private boolean useTransformer = true;
     private String pythonDirectory = "src/main/java/edu/arizona/cs/semantic_search.py ";
     private static final int CAT_INDEX = 0;
     private static final int Q_INDEX = 1;
@@ -52,13 +52,14 @@ public class QueryEngine {
         try {
             // String path = "/Users/sgrim/Desktop/483_final_project";
             // String path = "/Users/lilbig/Desktop/483_final_project";
-            String path = "/Users/karan/OneDrive/Desktop/college/483_final";
+            String path = "./../";
             QueryEngine objQueryEngine = new QueryEngine(path);
-            objQueryEngine.getJQuestions(path);
+            // objQueryEngine.getJQuestions(path);
 
-            objQueryEngine.runAllJQuestions(100); // Give it how many results you want to see
+            // objQueryEngine.runAllJQuestions(100); // Give it how many results you want to
+            // see
 
-            // objQueryEngine.runQs(); // Use this if you want to manually type in queries
+            objQueryEngine.runQs(); // Use this if you want to manually type in queries
 
             // objQueryEngine.checkExistence(); // Checks to see if the answer wikipedia
             // documents even exist in our collection
@@ -169,7 +170,7 @@ public class QueryEngine {
             fullQuery = fullQuery.substring(0, fullQuery.length() - 3);
 
             // System.out.println("You entered the query: " + fullQuery);
-            runQueries(fullQuery, 1000, q);
+            runQueries(fullQuery, 100, q);
 
             System.out.println("Please enter a query (or STOP)\n");
             q = userInput.nextLine();

@@ -21,11 +21,11 @@ bi_encoder_type = "multi-qa-mpnet-base-dot-v1"
 top_k = 5
 top_k*=2
 	# Path for shortened Wikipedia documents
-path="/Users/karan/OneDrive/Desktop/college/483_final/wiki-subset-20140602-shortened"
+path="./wiki-subset-20140602-shortened"
 # Path for wikipedia documents to be used
-path2="/Users/karan/OneDrive/Desktop/college/483_final/final-project/output.txt"
+path2="./output.txt"
 # Path for 100 input questions
-path3="/Users/karan/OneDrive/Desktop/inputsamp.txt"
+#path3="/Users/karan/OneDrive/Desktop/inputsamp.txt"
 # Use 100 input questions as input for transformer
 use_input=False
 # Require the Java file to call the transformer with query as arg
@@ -224,7 +224,7 @@ def main():
     print(current_time)
 
     if(use_input):
-        f3=open(path3,'r',encoding='utf-8')
+        f3=open(path,'r',encoding='utf-8')
         ff=f3.readlines()
         for ln in ff:
             print(ln)

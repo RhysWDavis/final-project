@@ -1,100 +1,100 @@
-The document: African Union – United Nations Hybrid Operation in Darfur had a score of: 11.654
-The document: United Nations Partition Plan for Palestine had a score of: 10.792
-The document: United Nations Security Council Resolution 1441 had a score of: 10.631
-The document: United Nations Security Council Resolution 794 had a score of: 10.51
-The document: Presidency of George W. Bush had a score of: 10.502
-The document: Golan Heights had a score of: 10.474
-The document: Joe Biden had a score of: 10.33
-The document: Kentucky and Virginia Resolutions had a score of: 10.104
-The document: United Nations Security Council Resolution 348 had a score of: 10.079
-The document: United Nations Security Council Resolution 1962 had a score of: 10.072
-The document: International Criminal Court had a score of: 10.057
-The document: Convention on the Rights of the Child had a score of: 9.959
-The document: Palestinian refugee had a score of: 9.84
-The document: Griffith Island (Nunavut) had a score of: 9.79
-The document: United Nations Security Council Resolution 315 had a score of: 9.696
-The document: United Nations Security Council Resolution 349 had a score of: 9.696
-The document: Color television had a score of: 9.679
-The document: Religion in China had a score of: 9.575
-The document: Northern Cyprus had a score of: 9.513
-The document: Taiwan had a score of: 9.326 the reciprocal rank is 0.05
-The document: Capital punishment had a score of: 9.309
-The document: United Nations Security Council Resolution 1769 had a score of: 9.29
-The document: William Henry Harrison had a score of: 9.286
-The document: Palestinian people had a score of: 9.279
-The document: United Nations Security Council and the Iraq War had a score of: 9.025
-The document: 2008 Argentine government conflict with the agricultural sector had a score of: 8.975
-The document: Best alternative to a negotiated agreement had a score of: 8.961
-The document: Council of Europe Parliamentary Assembly Resolution 1416 (2005) had a score of: 8.812
-The document: United Nations Security Council Resolution 940 had a score of: 8.787
-The document: Sri Lanka had a score of: 8.757
-The document: Astronomical seeing had a score of: 8.751
-The document: United Nations General Assembly Resolution 505 had a score of: 8.743
-The document: United Nations Interim Administration Mission in Kosovo had a score of: 8.731
-The document: United Nations Security Council Resolution 314 had a score of: 8.715
-The document: Western Sahara had a score of: 8.679
-The document: One-China policy had a score of: 8.613
-The document: Cultural Revolution had a score of: 8.597
-The document: Korean War had a score of: 8.588
-The document: United Nations Security Council Resolution 354 had a score of: 8.53
-The document: Osteopathy had a score of: 8.5
-The document: Harmony with nature had a score of: 8.374
-The document: United Nations Security Council Resolution 353 had a score of: 8.343
-The document: Kosovo Liberation Army had a score of: 8.341
-The document: Partial agreement had a score of: 8.332
-The document: Comprehensive Nuclear-Test-Ban Treaty had a score of: 8.293
-The document: Afro-Descendant had a score of: 8.251
-The document: United Nations Security Council Resolution 1963 had a score of: 8.204
-The document: Roanoke Island had a score of: 8.175
-The document: Veto had a score of: 8.17
-The document: Sex reassignment therapy had a score of: 8.149
-The document: Invasion of Grenada had a score of: 8.109
-The document: Hamas had a score of: 8.063
-The document: Metric prefix had a score of: 8.056
-The document: Travers Island, New York had a score of: 8.046
-The document: Hong Kong had a score of: 8.018
-The document: United Nations Security Council Resolution 1961 had a score of: 8.002
-The document: Scope (computer science) had a score of: 7.991
-The document: 7 Medical Battalion Group had a score of: 7.971
-The document: Iran–Iraq War had a score of: 7.901
-The document: Political status of Taiwan had a score of: 7.784
-The document: Ghulam Hussain Hidayatullah had a score of: 7.782
-The document: CompactFlash had a score of: 7.776
-The document: Gulf War had a score of: 7.775
-The document: Electron microscope had a score of: 7.768
-The document: Debate had a score of: 7.724
-The document: Rising Sun Flag had a score of: 7.707
-The document: Black hole complementarity had a score of: 7.702
-The document: Budget crisis had a score of: 7.654
-The document: Special Committee to Investigate Israeli Practices Affecting the Human Rights of the Palestinian People had a score of: 7.614
-The document: Reverse Address Resolution Protocol had a score of: 7.59
-The document: Vietnam War had a score of: 7.553
-The document: President's commission on aviation security and terrorism had a score of: 7.525
-The document: Alternative dispute resolution had a score of: 7.496
-The document: Cyprus dispute had a score of: 7.485
-The document: Amiga Advanced Graphics Architecture had a score of: 7.465
-The document: North Korea had a score of: 7.45
-The document: Dáil Constitution had a score of: 7.448
-The document: United Nations Security Council Resolution 351 had a score of: 7.442
-The document: Convention for the Suppression of the Traffic in Persons and of the Exploitation of the Prostitution of Others had a score of: 7.436
-The document: HMS Resolution had a score of: 7.435
-The document: Kuomintang had a score of: 7.431
-The document: Flag of Vietnam had a score of: 7.412
-The document: Resolution-class submarine had a score of: 7.408
-The document: Taiwan Province had a score of: 7.35
-The document: NTSC had a score of: 7.292
-The document: Muslim Brotherhood had a score of: 7.289
-The document: Takbir had a score of: 7.282
-The document: Universal jurisdiction had a score of: 7.281
-The document: AC'97 had a score of: 7.28
-The document: Theodore Davis (Canadian politician) had a score of: 7.261
-The document: Chinese name had a score of: 7.247
-The document: Elvis Presley had a score of: 7.246
-The document: Lowther Island had a score of: 7.233
-The document: Sharpless epoxidation had a score of: 7.231
-The document: Frank K. Mott had a score of: 7.208
-The document: Nucleosome had a score of: 7.154
-The document: Charles W. King had a score of: 7.152
-The document: CITES had a score of: 7.141
-The document: Oxidoreductase FAD-binding domain had a score of: 7.117
-The document: Corfu had a score of: 7.091
+The document: New York Press had a score of: 11.126
+The document: The Baltimore Sun had a score of: 10.753
+The document: Metropolis Daily had a score of: 10.009
+The document: Bunker Hill Gazette-News had a score of: 9.849
+The document: The Irish Times had a score of: 9.727
+The document: London Evening Standard had a score of: 9.377
+The document: Great Debasement had a score of: 8.617
+The document: The Georgetown Voice had a score of: 8.553
+The document: The Daily Telegraph (Australia) had a score of: 8.489
+The document: Electronic paper had a score of: 8.479
+The document: The Notion Club Papers had a score of: 8.315
+The document: El Diario de El Paso had a score of: 8.117
+The document: Circulating capital had a score of: 8.062
+The document: Nigerian Observer had a score of: 8.027
+The document: The Newton Kansan had a score of: 7.97
+The document: NRC Handelsblad had a score of: 7.946
+The document: Paper Mario had a score of: 7.868
+The document: The Boston Post had a score of: 7.848
+The document: Politiken had a score of: 7.739
+The document: Marc Sorenson had a score of: 7.726
+The document: Euro had a score of: 7.712
+The document: Southern California InFocus had a score of: 7.674
+The document: Toilet paper had a score of: 7.65
+The document: The Economist had a score of: 7.63
+The document: Wax paper had a score of: 7.516
+The document: Blind carbon copy had a score of: 7.503
+The document: Star Tribune had a score of: 7.462
+The document: Al-Quds Al-Arabi had a score of: 7.436
+The document: Ox-Cart Library had a score of: 7.409
+The document: 2003 term United States Supreme Court opinions of Anthony Kennedy had a score of: 7.321
+The document: The London Free Press had a score of: 7.265
+The document: 2009 term United States Supreme Court opinions of Anthony Kennedy had a score of: 7.217
+The document: Rome Cee had a score of: 7.1
+The document: Carbon paper had a score of: 7.089
+The document: Painting had a score of: 7.076
+The document: Anti-Federalist Papers had a score of: 7.072
+The document: Uranium mining in the United States had a score of: 7.03
+The document: Australian ten-dollar note had a score of: 6.985
+The document: Rock-paper-scissors had a score of: 6.874
+The document: Glasgow Caledonian University had a score of: 6.848
+The document: Houston Chronicle had a score of: 6.818
+The document: Law school in the United States had a score of: 6.817
+The document: Bluffton Today had a score of: 6.806
+The document: List of towns and cities in Norway had a score of: 6.803
+The document: Venezuela had a score of: 6.797
+The document: Avisa Nordland had a score of: 6.795
+The document: Stavanger Aftenblad had a score of: 6.795
+The document: Die Zeit had a score of: 6.792
+The document: Richmond Post had a score of: 6.75
+The document: HaBoker had a score of: 6.75
+The document: The Philadelphia Independent (2002–05) had a score of: 6.75
+The document: Precision Array for Probing the Epoch of Reionization had a score of: 6.739
+The document: Dos Fraye Vort had a score of: 6.662
+The document: Morning Star (British newspaper) had a score of: 6.652
+The document: Dagbladet Information had a score of: 6.619
+The document: All or Nothing at All had a score of: 6.612
+The document: Orange County Business Journal had a score of: 6.604
+The document: Johan Richter (inventor) had a score of: 6.597
+The document: Hugh Edwin Strickland had a score of: 6.585
+The document: Richard Williams (journalist) had a score of: 6.579
+The document: Stanford University had a score of: 6.575
+The document: Ingenuity had a score of: 6.537
+The document: The Hans India had a score of: 6.504
+The document: Seal (emblem) had a score of: 6.498
+The document: Michel Chamillart had a score of: 6.494
+The document: New York (magazine) had a score of: 6.474
+The document: Telemarksavisa had a score of: 6.467
+The document: Mach Song had a score of: 6.429
+The document: Minute (French newspaper) had a score of: 6.398
+The document: Falkirk Herald had a score of: 6.337
+The document: Albertonykus had a score of: 6.326
+The document: Il Risorgimento (newspaper) had a score of: 6.307
+The document: File:QtubIronPillar.JPG|thumb|right|200px|The iron pillar of Delhi, is said to have been fashioned at the time of Chandragupta Vikramaditya (375–413) of the Gupta Empire.Balasubramaniam, R. 2002 had a score of: 6.301
+The document: Enoch seminar had a score of: 6.261
+The document: Texas A&M Health Science Center School of Public Health had a score of: 6.248
+The document: Neville Chamberlain had a score of: 6.24
+The document: Pressed flower craft had a score of: 6.181
+The document: The Telegraph (Nashua) had a score of: 6.178
+The document: Donegal Times had a score of: 6.173
+The document: Fiber crop had a score of: 6.171
+The document: Watermark had a score of: 6.136
+The document: MPEG-4 Part 3 had a score of: 6.127
+The document: Reforma had a score of: 6.12
+The document: Peddibhotla Subbaramaiah had a score of: 6.09
+The document: Paper football had a score of: 6.088
+The document: Russ Smith (publisher) had a score of: 6.078
+The document: David Ungar had a score of: 6.078
+The document: William Randolph Hearst had a score of: 6.074
+The document: Robbins Island (Tasmania) had a score of: 6.07
+The document: Drip brew had a score of: 6.068
+The document: The Oakland Post (California) had a score of: 6.061
+The document: People's Daily had a score of: 6.029
+The document: Bangalore had a score of: 6.005
+The document: Literacy had a score of: 6.005
+The document: Hugh Brock had a score of: 5.995
+The document: Sustainable industries had a score of: 5.994
+The document: Sarah Clackson had a score of: 5.987
+The document: Sparta had a score of: 5.961
+The document: JPMorgan Chase Corporate Challenge had a score of: 5.961
+The document: Molloy College had a score of: 5.961
